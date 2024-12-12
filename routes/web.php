@@ -49,6 +49,7 @@ Route::middleware(['auth:customer'])->group(function(){
 
 Route::middleware(['auth:user'])->group(function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('index-indexPesananMasukA');
     
     Route::get('kategori', [CategoriesController::class, 'index'])->name('kategori-index');
     Route::get('kategori/create', [CategoriesController::class, 'create'])->name('kategori-create');
@@ -92,9 +93,6 @@ Route::middleware(['auth:user'])->group(function(){
     
     Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
     Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
-
-    Route::get('pesanan-masuk', [StatusController::class, 'indexPesananMasuk'])->name('index-indexPesananMasuk');
-    Route::get('pesanan-masuk/confirm/{id}', [StatusController::class, 'indexPesananMasukA'])->name('index-indexPesananMasukA');
     
     Route::get('menunggu-jadwal', [StatusController::class, 'indexMenungguJadwal'])->name('index-indexMenungguJadwal');
     Route::get('menunggu-jadwal/confirm/{id}', [StatusController::class, 'indexMenungguJadwalA'])->name('index-indexMenungguJadwalA');

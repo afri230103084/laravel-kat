@@ -28,7 +28,7 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->nama ?? 'Tidak Diketahui' }}</td>
+                                <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
                                     <span class="badge 
                                         @if ($order->status === 'baru') badge-primary
@@ -79,7 +79,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Nama Pelanggan</span>
-                        <strong>{{ $order->nama ?? 'Tidak Diketahui' }}</strong>
+                        <strong>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Tanggal Acara</span>
@@ -117,6 +117,30 @@
                         <h6 class="mb-1">Catatan</h6>
                         <p class="mb-0 text-muted">{{ $order->catatan }}</p>
                     </li>
+                    <div class="card mt-3">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Nama Produk</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th class="text-right">Harga Satuan</th>
+                                        <th class="text-right">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                @foreach ($order->order_items as $item)
+                                <tbody>
+                                    <tr>
+                                        <td>{{ $item->product->nama }}</td>
+                                        <td class="text-center">{{ $item->jumlah }}</td>
+                                        <td class="text-right">Rp {{ number_format($item->harga_satuan, 2) }}</td>
+                                        <td class="text-right">Rp {{ number_format($item->subtotal, 2) }}</td>
+                                    </tr>
+                                </tbody>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
                 </ul>
             </div>
             <div class="modal-footer w-100">

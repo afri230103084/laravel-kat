@@ -113,8 +113,6 @@
                                         </i><span>Manage Pesanan</span>
                                     </a>
                                     <ul class="sidebar-submenu">
-                                        {{-- <li><a href="{{ route('pesanan-create') }}">Buat Pesanan</a></li> --}}
-                                        <li><a href="{{ route('index-indexPesananMasuk') }}">Pesanan Masuk</a></li>
                                         <li><a href="{{ route('index-indexMenungguJadwal') }}">Menunggu Jadwal</a></li>
                                         <li><a href="{{ route('index-indexPesananDibuat') }}">Pesanan Dibuat</a></li>
                                         <li><a href="{{ route('index-indexPesananSelesai') }}">Pesanan Selesai</a></li>

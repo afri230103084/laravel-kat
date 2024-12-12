@@ -14,6 +14,24 @@ class DashboardController extends Controller
         $totalHargaSelesai = Orders::where('status', 'transaksi_selesai')->sum('total_harga');
         $totalPengeluaran = Expense::sum('jumlah');
 
-        return view('dashboard', compact('totalOrderSelesai', 'totalHargaSelesai', 'totalPengeluaran'));
+        $orders = Orders::with('customers')->with('order_items.product')
+                ->where('orders.status', 'baru')
+                ->get();
+
+        return view('dashboard', [
+            'totalOrderSelesai' => $totalOrderSelesai,
+            'totalHargaSelesai' => $totalHargaSelesai,
+            'totalPengeluaran' => $totalPengeluaran,
+            'orders' => $orders,
+        ]);
+    }
+
+    public function indexPesananMasukA($id)
+    {
+        $data = Orders::FindOrFail($id);
+        $data->status = 'menunggu';
+        $data->save();
+
+        return redirect()->route('dashboard');
     }
 }

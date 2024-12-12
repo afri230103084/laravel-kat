@@ -70,7 +70,7 @@ class EmployeesController extends Controller
             'jabatan' => 'required|string|max:255',
             'alamat' => 'required|string',
             'gaji' => 'required|numeric|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'no_ktp' => 'nullable|string|max:50',
             'tanggal_masuk' => 'required|date',
         ]);

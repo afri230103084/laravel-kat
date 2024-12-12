@@ -6,35 +6,16 @@ use App\Models\Orders;
 use Illuminate\Http\Request;
 
 class StatusController extends Controller
-{
-    public function indexPesananMasuk()
-    {
-        $orders = Orders::with('customers')->with('order_items')
-                ->where('orders.status', 'baru')
-                ->get();
-
-                // dd($orders);
-        return view('pos.pesanan_masuk', [
-            'orders' => $orders
-        ]);
-    }
-
-    public function indexPesananMasukA($id)
-    {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'menunggu';
-        $data->save();
-
-        return redirect()->route('index-indexPesananMasuk');
-    }
-    
+{   
     public function indexMenungguJadwal()
     {
-        $orders = Orders::join('customers', 'orders.customer_id','customers.id')
+        $orders = Orders::with('customers')->with('order_items.product')
                 ->where('orders.status', 'menunggu')
                 ->get();
 
-        return view('pos.menunggu_jadwal', compact('orders'));
+        return view('pos.menunggu_jadwal', [
+            'orders' => $orders
+        ]);
     }
 
     public function indexMenungguJadwalA($id)
@@ -57,11 +38,13 @@ class StatusController extends Controller
 
     public function indexPesananDibuat()
     {
-        $orders = Orders::join('customers', 'orders.customer_id','customers.id')
+        $orders = Orders::with('customers')->with('order_items.product')
                 ->where('orders.status', 'dibuat')
                 ->get();
 
-        return view('pos.pesanan_dibuat', compact('orders'));
+        return view('pos.pesanan_dibuat', [
+            'orders' => $orders
+        ]);
     }
 
     public function indexPesananDibuatA($id)
@@ -75,11 +58,13 @@ class StatusController extends Controller
 
     public function indexPesananSelesai()
     {
-        $orders = Orders::join('customers', 'orders.customer_id','customers.id')
+        $orders = Orders::with('customers')->with('order_items.product')
                 ->where('orders.status', 'selesai')
                 ->get();
 
-        return view('pos.pesanan_selesai', compact('orders'));
+        return view('pos.pesanan_selesai', [
+            'orders' => $orders
+        ]);
     }
 
     public function indexPesananSelesaiA($id)
@@ -102,11 +87,13 @@ class StatusController extends Controller
 
     public function indexPesananDiantar()
     {
-        $orders = Orders::join('customers', 'orders.customer_id','customers.id')
+        $orders = Orders::with('customers')->with('order_items.product')
                 ->where('orders.status', 'diantar')
                 ->get();
 
-        return view('pos.pesanan_diantar', compact('orders'));
+        return view('pos.pesanan_diantar', [
+            'orders' => $orders
+        ]);
     }
 
     public function indexPesananDiantarA($id)
