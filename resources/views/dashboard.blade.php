@@ -11,9 +11,9 @@
             <div class="card o-hidden">
                 <div class="bg-primary b-r-4 card-body">
                     <div class="media static-top-widget">
-                        <div class="align-self-center text-center"><i data-feather="database"></i></div>
+                        <div class="align-self-center text-center"><i data-feather="star"></i></div>
                         <div class="media-body"><span class="m-0">Pesanan Selesai</span>
-                            <h4 class="mb-0 counter">{{ $totalOrderSelesai }}</h4><i class="icon-bg" data-feather="database"></i>
+                            <h4 class="mb-0 counter">{{ $totalOrderSelesai }}</h4><i class="icon-bg" data-feather="star"></i>
                         </div>
                     </div>
                 </div>
@@ -23,9 +23,9 @@
             <div class="card o-hidden">
                 <div class="bg-success b-r-4 card-body">
                     <div class="media static-top-widget">
-                        <div class="align-self-center text-center"><i data-feather="database"></i></div>
+                        <div class="align-self-center text-center"><i data-feather="dollar-sign"></i></div>
                         <div class="media-body"><span class="m-0">Penjualan</span>
-                            <h4 class="mb-0 counter">Rp {{ number_format($totalHargaSelesai, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="database"></i>
+                            <h4 class="mb-0 counter">Rp {{ number_format($totalHargaSelesai, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="dollar-sign"></i>
                         </div>
                     </div>
                 </div>
@@ -35,9 +35,9 @@
             <div class="card o-hidden">
                 <div class="bg-danger b-r-4 card-body">
                     <div class="media static-top-widget">
-                        <div class="align-self-center text-center"><i data-feather="database"></i></div>
+                        <div class="align-self-center text-center"><i data-feather="tag"></i></div>
                         <div class="media-body"><span class="m-0">Pengeluaran</span>
-                            <h4 class="mb-0 counter">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="database"></i>
+                            <h4 class="mb-0 counter">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="tag"></i>
                         </div>
                     </div>
                 </div>
