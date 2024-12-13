@@ -54,7 +54,7 @@ class OrdersController extends Controller
         $order = Orders::create([
             'customer_id' => $request->customer_id,
             'kode_transaksi' => $kodeTransaksi,
-            'status' => 'baru',
+            'status' => 'menunggu',
             'jenis_pengambilan' => $request->jenis_pengambilan,
             'metode_pembayaran' => $request->metode_pembayaran,
             'status_pembayaran' => $statusPembayaran,

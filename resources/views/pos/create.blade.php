@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalHargaElement = document.getElementById('total-harga');
     const jumlahDibayarInput = document.getElementById('jumlah-dibayar');
     const statusInfo = document.getElementById('status-pembayaran-info');
-    const metodePembayaranSelect = document.querySelector('select[name="metode_pembayaran"]');
+    const metodePembayaranSelect = $('select[name="metode_pembayaran"]');
     const buktiPembayaranContainer = document.getElementById('bukti-pembayaran-container');
 
     const updateTotalHarga = () => {
@@ -209,8 +209,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    metodePembayaranSelect.addEventListener('change', () => {
-        buktiPembayaranContainer.style.display = metodePembayaranSelect.value === 'transfer' ? 'block' : 'none';
-    });
+    if (metodePembayaranSelect.length) {
+        metodePembayaranSelect.on('change', function () {
+            const selectedValue = $(this).val();
+
+            if (selectedValue === 'transfer') {
+                buktiPembayaranContainer.style.display = 'block';
+            } else {
+                buktiPembayaranContainer.style.display = 'none';
+            }
+        });
+
+        metodePembayaranSelect.trigger('change');
+    }
 });
 </script>

@@ -103,10 +103,10 @@ Route::middleware(['auth:user'])->group(function(){
     
     Route::get('pesanan-selesai', [StatusController::class, 'indexPesananSelesai'])->name('index-indexPesananSelesai');
     Route::get('pesanan-selesai/confirm/{id}', [StatusController::class, 'indexPesananSelesaiA'])->name('index-indexPesananSelesaiA');
-    Route::get('pesanan-selesai/final/{id}', [StatusController::class, 'indexPesananSelesaiB'])->name('index-indexPesananSelesaiB');
+    Route::post('pesanan-selesai/final/{id}', [StatusController::class, 'indexPesananSelesaiB'])->name('index-indexPesananSelesaiB');
 
     Route::get('pesanan-diantar', [StatusController::class, 'indexPesananDiantar'])->name('index-indexPesananDiantar');
-    Route::get('pesanan-diantar/confirm/{id}', [StatusController::class, 'indexPesananDiantarA'])->name('index-indexPesananDiantarA');
+    Route::post('pesanan-diantar/confirm/{id}', [StatusController::class, 'indexPesananDiantarA'])->name('index-indexPesananDiantarA');
 
     Route::get('laporan_penjualan', [SalesReportController::class, 'index'])->name('laporan_penjualan-index');
 });

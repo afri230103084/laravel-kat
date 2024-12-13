@@ -76,12 +76,24 @@ class StatusController extends Controller
         return redirect()->route('index-indexPesananSelesai');
     }
 
-    public function indexPesananSelesaiB($id)
+    public function indexPesananSelesaiB(Request $request, $id)
     {
-        $data = Orders::FindOrFail($id);
+        $data = Orders::findOrFail($id);
+    
+        if ($request->has('jumlah_pembayaran')) {
+            $jumlah_pembayaran = $request->input('jumlah_pembayaran');
+            $data->jumlah_dibayar += $jumlah_pembayaran;
+
+            if ($data->jumlah_dibayar >= $data->total_harga) {
+                $data->status_pembayaran = 'lunas';
+            }
+        } else {
+            return redirect()->back();
+        }
+    
         $data->status = 'transaksi_selesai';
         $data->save();
-
+    
         return redirect()->route('index-indexPesananSelesai');
     }
 
@@ -96,9 +108,21 @@ class StatusController extends Controller
         ]);
     }
 
-    public function indexPesananDiantarA($id)
+    public function indexPesananDiantarA(Request $request, $id)
     {
-        $data = Orders::FindOrFail($id);
+        $data = Orders::findOrFail($id);
+    
+        if ($request->has('jumlah_pembayaran')) {
+            $jumlah_pembayaran = $request->input('jumlah_pembayaran');
+            $data->jumlah_dibayar += $jumlah_pembayaran;
+
+            if ($data->jumlah_dibayar >= $data->total_harga) {
+                $data->status_pembayaran = 'lunas';
+            }
+        } else {
+            return redirect()->back();
+        }
+    
         $data->status = 'transaksi_selesai';
         $data->save();
 
