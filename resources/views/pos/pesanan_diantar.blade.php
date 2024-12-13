@@ -46,7 +46,12 @@
                                         {{ ucfirst($order->status_pembayaran) }}
                                     </span>
                                 </td>
-                                <td>{{ $order->tanggal_acara }}</td>
+                                <td>
+                                    {{ $order->tanggal_acara }} <br>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($order->tanggal_acara)->diffForHumans() }}
+                                    </small>
+                                </td>
                                 <td>
                                     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#orderItemsModal{{ $order->id }}">Detail</button>
                                 </td>

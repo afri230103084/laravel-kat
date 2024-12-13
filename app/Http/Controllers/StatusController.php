@@ -6,12 +6,12 @@ use App\Models\Orders;
 use Illuminate\Http\Request;
 
 class StatusController extends Controller
-{   
+{
     public function indexMenungguJadwal()
     {
         $orders = Orders::with('customers')->with('order_items.product')
-                ->where('orders.status', 'menunggu')
-                ->get();
+            ->where('orders.status', 'menunggu')
+            ->get();
 
         return view('pos.menunggu_jadwal', [
             'orders' => $orders
@@ -39,8 +39,8 @@ class StatusController extends Controller
     public function indexPesananDibuat()
     {
         $orders = Orders::with('customers')->with('order_items.product')
-                ->where('orders.status', 'dibuat')
-                ->get();
+            ->where('orders.status', 'dibuat')
+            ->get();
 
         return view('pos.pesanan_dibuat', [
             'orders' => $orders
@@ -59,8 +59,8 @@ class StatusController extends Controller
     public function indexPesananSelesai()
     {
         $orders = Orders::with('customers')->with('order_items.product')
-                ->where('orders.status', 'selesai')
-                ->get();
+            ->where('orders.status', 'selesai')
+            ->get();
 
         return view('pos.pesanan_selesai', [
             'orders' => $orders
@@ -79,7 +79,13 @@ class StatusController extends Controller
     public function indexPesananSelesaiB(Request $request, $id)
     {
         $data = Orders::findOrFail($id);
-    
+
+        if ($data->status_pembayaran === 'lunas') {
+            $data->status = 'transaksi_selesai';
+            $data->save();
+            return redirect()->route('index-indexPesananSelesai');
+        }
+
         if ($request->has('jumlah_pembayaran')) {
             $jumlah_pembayaran = $request->input('jumlah_pembayaran');
             $data->jumlah_dibayar += $jumlah_pembayaran;
@@ -90,18 +96,18 @@ class StatusController extends Controller
         } else {
             return redirect()->back();
         }
-    
+
         $data->status = 'transaksi_selesai';
         $data->save();
-    
+
         return redirect()->route('index-indexPesananSelesai');
     }
 
     public function indexPesananDiantar()
     {
         $orders = Orders::with('customers')->with('order_items.product')
-                ->where('orders.status', 'diantar')
-                ->get();
+            ->where('orders.status', 'diantar')
+            ->get();
 
         return view('pos.pesanan_diantar', [
             'orders' => $orders
@@ -111,7 +117,13 @@ class StatusController extends Controller
     public function indexPesananDiantarA(Request $request, $id)
     {
         $data = Orders::findOrFail($id);
-    
+
+        if ($data->status_pembayaran === 'lunas') {
+            $data->status = 'transaksi_selesai';
+            $data->save();
+            return redirect()->route('index-indexPesananSelesai');
+        }
+
         if ($request->has('jumlah_pembayaran')) {
             $jumlah_pembayaran = $request->input('jumlah_pembayaran');
             $data->jumlah_dibayar += $jumlah_pembayaran;
@@ -122,7 +134,7 @@ class StatusController extends Controller
         } else {
             return redirect()->back();
         }
-    
+
         $data->status = 'transaksi_selesai';
         $data->save();
 

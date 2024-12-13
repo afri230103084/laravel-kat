@@ -30,23 +30,23 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
-                                    <span class="badge 
-                                        @if ($order->status === 'baru') badge-primary
-                                        @elseif ($order->status === 'konfirmasi') badge-success
-                                        @elseif ($order->status === 'batal') badge-danger
-                                        @else badge-secondary @endif">
+                                    <span class="badge badge-primary">
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </td>
                                 <td>{{ ucfirst($order->jenis_pengambilan) }}</td>
                                 <td>
                                     <span class="badge 
-                                        @if ($order->status_pembayaran === 'dp') badge-warning
-                                        @else badge-success @endif">
+                                        @if ($order->status_pembayaran === 'dp') badge-warning @else badge-success @endif">
                                         {{ ucfirst($order->status_pembayaran) }}
                                     </span>
                                 </td>
-                                <td>{{ $order->tanggal_acara }}</td>
+                                <td>
+                                    {{ $order->tanggal_acara }} <br>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($order->tanggal_acara)->diffForHumans() }}
+                                    </small>
+                                </td>
                                 <td>
                                     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#orderItemsModal{{ $order->id }}">Detail</button>
                                 </td>
