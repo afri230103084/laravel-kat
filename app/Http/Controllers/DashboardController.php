@@ -26,11 +26,25 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function indexPesananMasukA($id)
+    public function indexPesananMasukA(Request $request, $id)
     {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'menunggu';
-        $data->save();
+        $order = Orders::FindOrFail($id);
+
+        $request->validate([
+            'jumlah_dibayar' => 'required|numeric|min:0',
+        ]);
+
+        $jumlah_dibayar = $request->input('jumlah_dibayar');
+        $order->jumlah_dibayar += $jumlah_dibayar;
+
+        if ($order->jumlah_dibayar >= $order->total_harga) {
+            $order->status_pembayaran = 'lunas';
+        } else {
+            $order->status_pembayaran = 'dp';
+        }
+
+        $order->status = 'menunggu';
+        $order->save();
 
         return redirect()->route('dashboard');
     }

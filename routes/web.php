@@ -54,7 +54,7 @@ Route::middleware(['auth:customer'])->group(function(){
 
 Route::middleware(['auth:user'])->group(function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('index-indexPesananMasukA');
+    Route::post('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('confirm-indexPesananMasukA');
     
     Route::get('kategori', [CategoriesController::class, 'index'])->name('kategori-index');
     Route::get('kategori/create', [CategoriesController::class, 'create'])->name('kategori-create');

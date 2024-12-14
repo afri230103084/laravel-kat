@@ -60,9 +60,8 @@
                         <tr>
                             <th>#</th>
                             <th>Customer</th>
-                            <th>Status Pesanan</th>
-                            <th>Jenis Pengambilan</th>
-                            <th>Status Pembayaran</th>
+                            <th>Status</th>
+                            <th>Total Harga</th>
                             <th>Tanggal Acara</th>
                             <th>Aksi</th>
                         </tr>
@@ -81,15 +80,13 @@
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </td>
-                                <td>{{ ucfirst($order->jenis_pengambilan) }}</td>
+                                <td>Rp {{ number_format($order->total_harga) }}</td>
                                 <td>
-                                    <span class="badge 
-                                        @if ($order->status_pembayaran === 'dp') badge-warning
-                                        @else badge-success @endif">
-                                        {{ ucfirst($order->status_pembayaran) }}
-                                    </span>
+                                    {{ $order->tanggal_acara }} <br>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($order->tanggal_acara)->diffForHumans() }}
+                                    </small>
                                 </td>
-                                <td>{{ $order->tanggal_acara }}</td>
                                 <td>
                                     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#orderItemsModal{{ $order->id }}">Detail</button>
                                 </td>
@@ -142,7 +139,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Status Pembayaran</span>
-                        <span class="badge badge-warning">{{ ucfirst($order->status_pembayaran) }}</span>
+                        <span class="badge badge-warning">{{ strtoupper($order->status_pembayaran) }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Metode Pembayaran</span>
@@ -159,6 +156,16 @@
                     <li class="list-group-item">
                         <h6 class="mb-1">Catatan</h6>
                         <p class="mb-0 text-muted">{{ $order->catatan }}</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Bukti Pembayaran</span>
+                        @if ($order->bukti_pembayaran)
+                            <a href="{{ asset('storage/' . $order->bukti_pembayaran) }}" target="_blank" class="btn btn-primary btn-sm">
+                                Lihat Bukti Pembayaran
+                            </a>
+                        @else
+                            <span class="text-muted">Belum Ada Bukti Pembayaran</span>
+                        @endif
                     </li>
                     <div class="card mt-3">
                         <div class="table-responsive">
@@ -186,17 +193,41 @@
                     </div>
                 </ul>
             </div>
-            <div class="modal-footer w-100">
-                <div class="text-start w-100 mb-3">
-                    <small class="text-muted d-block mb-1">
-                        <strong>Konfirmasi Pesanan:</strong> Dengan mengonfirmasi pesanan ini, status akan berubah menjadi <strong>"Menunggu untuk Dibuat"</strong>.
-                    </small>
+            <form action="{{ route('confirm-indexPesananMasukA', $order->id) }}" method="POST">
+                <div class="modal-footer w-100">
+                    <div class="text-start w-100 mb-3">
+                        @csrf
+                        <div class="form-group">
+                            <label for="jumlah_dibayar">Total Dibayar</label>
+                            <input type="number" step="0.01" id="jumlah_dibayar{{ $order->id }}" name="jumlah_dibayar" class="form-control" placeholder="Masukkan jumlah pembayaran"
+                                oninput="cekStatusPembayaran({{ $order->total_harga }}, {{ $order->id }})" required>
+                        </div>
+                        <div class="alert alert-info" id="statusPembayaran{{ $order->id }}">
+                            Masukkan jumlah pembayaran.
+                        </div>
+                        <small class="text-muted d-block mb-1">
+                            <strong>Konfirmasi Pesanan:</strong> Dengan mengonfirmasi pesanan ini, status akan berubah menjadi <strong>"Menunggu untuk Dibuat"</strong>.
+                        </small>
+                        <div class="text-right w-100 mb-3">
+                            <button type="submit" class="btn btn-success btn-sm">Verifikasi Pembayaran</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-right w-100 mb-3">
-                    <a href="/dashboard/confirm/{{ $order->id }}" class="btn btn-success btn-sm">Konfirmasi Pesanan</a>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 @endforeach
+
+<script>
+    function cekStatusPembayaran(totalHarga, id) {
+        const inputDibayar = document.getElementById('jumlah_dibayar' + id).value;
+        const statusPembayaran = document.getElementById('statusPembayaran' + id);
+
+        if (inputDibayar >= totalHarga) {
+            statusPembayaran.textContent = 'Status Pembayaran: LUNAS';
+        } else {
+            statusPembayaran.textContent = 'Status Pembayaran: DP (Belum Lunas)';
+        }
+    }
+</script>
