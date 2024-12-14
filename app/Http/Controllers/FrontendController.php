@@ -7,27 +7,11 @@ use App\Models\OrderItems;
 use App\Models\Orders;
 use App\Models\Products;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Midtrans\Config;
-use Midtrans\Snap;
 
 class FrontendController extends Controller
 {
-    public function __construct()
-    {
-        Config::$serverKey = env('MIDTRANS_SERVERKEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-    }
-
-    public function myProfile()
-    {
-        return view('frontend.profile');
-    }
-
     public function buat_pesanan()
     {
         $product = Products::where('status', 'aktif')->get();
@@ -37,122 +21,101 @@ class FrontendController extends Controller
     public function buat_pesananStore(Request $request)
     {
         $request->validate([
-            'customer_id' => 'required',
-            'jenis_pengambilan' => 'required',
-            'metode_pembayaran' => 'required',
-            'alamat' => 'required',
-            'tanggal_acara' => 'required',
-            'waktu_acara' => 'required',
-            'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.jumlah' => 'required|integer|min:1',
         ]);
 
-        $kodeTransaksi = 'PS' . strtoupper(Str::random(8));
+        $order = Orders::create([
+            'customer_id' => auth()->id(),
+            'total_harga' => 0,
+            'status' => 'draft',
+            'kode_transaksi' => $this->generateKodeTransaksi(),
+        ]);
+
         $totalHarga = 0;
 
         foreach ($request->items as $item) {
-            $product = Products::find($item['product_id']);
-            $totalHarga += $product->harga * $item['jumlah'];
-        }
+            $product = Products::findOrFail($item['product_id']);
+            $jumlah = max($product->minimal_pesan, $item['jumlah']);
+            $subtotal = $product->harga * $jumlah;
 
-        $order = Orders::create([
-            'customer_id' => $request->customer_id,
-            'kode_transaksi' => $kodeTransaksi,
-            'jenis_pengambilan' => $request->jenis_pengambilan,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'total_harga' => $totalHarga,
-            'alamat' => $request->alamat,
-            'tanggal_acara' => $request->tanggal_acara,
-            'waktu_acara' => $request->waktu_acara,
-        ]);
-
-        foreach ($request->items as $item) {
-            $product = Products::find($item['product_id']);
             OrderItems::create([
                 'order_id' => $order->id,
-                'product_id' => $item['product_id'],
-                'jumlah' => $item['jumlah'],
+                'product_id' => $product->id,
+                'jumlah' => $jumlah,
                 'harga_satuan' => $product->harga,
-                'subtotal' => $product->harga * $item['jumlah'],
+                'subtotal' => $subtotal,
             ]);
+
+            $totalHarga += $subtotal;
         }
 
-        $customer = Customers::find($request->customer_id);
+        $order->update(['total_harga' => $totalHarga]);
 
-        if (!$customer) {
-            Log::error('Pelanggan tidak ditemukan.', ['customer_id' => $request->customer_id]);
-            return back()->with('error', 'Pelanggan tidak ditemukan.');
-        }
-
-        if ($request->metode_pembayaran === 'transfer') {
-            try {
-                $params = [
-                    'transaction_details' => [
-                        'order_id' => $kodeTransaksi,
-                        'gross_amount' => $totalHarga,
-                    ],
-                    'customer_details' => [
-                        'first_name' => $customer->nama,
-                        'email' => $customer->email,
-                        'phone' => $customer->telepon,
-                    ],
-                    'item_details' => array_map(function ($item) use ($request) {
-                        $product = Products::find($item['product_id']);
-                        return [
-                            'id' => $item['product_id'],  // ID produk
-                            'price' => $product->harga,   // Harga produk
-                            'quantity' => $item['jumlah'], // Jumlah produk
-                            'name' => $product->nama,
-                        ];
-                    }, $request->items),
-                ];
-
-                Log::info('Memulai proses generate Snap Token.', ['params' => $params]);
-                $snapToken = Snap::getSnapToken($params);
-                Log::info('Snap Token berhasil dibuat.', ['snap_token' => $snapToken]);
-
-                if (!$snapToken) {
-                    Log::error('Gagal mendapatkan Snap Token dari Midtrans.');
-                    return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
-                }
-
-
-                // Ambil URL untuk pembayaran dan redirect ke sana
-                $paymentUrl = 'https://app.sandbox.midtrans.com/snap/v2/vtweb/' . $snapToken;
-
-                return redirect()->to($paymentUrl);
-            } catch (\Exception $e) {
-                Log::error('Gagal mendapatkan Snap Token dari Midtrans.', ['error' => $e->getMessage()]);
-                return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
-            }
-        }
-
-        return redirect()->route('frontend-daftar_pesananUser')->with('success', 'Pesanan berhasil dibuat.');
+        return redirect()->route('frontend-daftar_pesananUser');
     }
 
-
-    public function handleWebhook(Request $request)
+    private function generateKodeTransaksi()
     {
-        Log::info('Midtrans webhook received.', ['data' => $request->all()]);
+        $prefix = 'TRX';
+        $date = date('Ymd');
+        $random = strtoupper(Str::random(6));
+        return $prefix . '-' . $date . '-' . $random;
+    }
 
-        $data = $request->all();
-        $order = Orders::where('kode_transaksi', $data['order_id'])->first();
+    public function keranjangBelanja()
+    {
+        $orders = Orders::where('status', 'draft')
+            ->where('customer_id', auth()->user()->id)
+            ->get();
 
-        if ($order) {
-            $status = $data['transaction_status'];
-            $amount = $data['gross_amount'];
+        return view('frontend.keranjang_belanja', compact('orders'));
+    }
 
-            if (in_array($status, ['capture', 'settlement'])) {
-                $order->update([
-                    'status_pembayaran' => 'lunas',
-                    'status' => 'dibuat',
-                    'jumlah_dibayar' => $amount,
-                ]);
-            } elseif (in_array($status, ['cancel', 'expire'])) {
-                $order->update(['status' => 'batal']);
-            }
+    public function HapusKeranjangBelanja($id)
+    {
+        $order = Orders::findOrFail($id);
+        $order->delete();
+
+        return redirect()->route('frontend-keranjangBelanja');
+    }
+
+    public function konfirmasiKeranjang($id)
+    {
+        $order = Orders::findOrFail($id);
+        return view('frontend.konfirmasi_pesanan', compact('order'));
+    }
+
+    public function konfirmasiKeranjangStore(Request $request, $id)
+    {
+        $order = Orders::findOrFail($id);
+
+        $request->validate([
+            'tanggal_acara' => 'required|date',
+            'waktu_acara' => 'required|date_format:H:i',
+            'alamat' => 'required|string',
+            'jenis_pengambilan' => 'required|in:diantar,diambil',
+            'metode_pembayaran' => 'required|in:transfer',
+            'bukti_pembayaran' => 'required|file|mimes:jpg,png,jpeg',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('bukti_pembayaran')) {
+            $filePath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         }
+
+        $order->update([
+            'status' => 'baru',
+            'tanggal_acara' => $request->tanggal_acara,
+            'waktu_acara' => $request->waktu_acara,
+            'alamat' => $request->alamat,
+            'catatan' => $request->catatan,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'bukti_pembayaran' => $filePath,
+            'jenis_pengambilan' => $request->jenis_pengambilan,
+        ]);
+
+        return redirect()->route('frontend-keranjangBelanja');
     }
 
     public function daftar_pesananUser()
@@ -160,5 +123,10 @@ class FrontendController extends Controller
         Log::info('Halaman daftar pesanan user diakses.', ['customer_id' => auth('customer')->id()]);
         $orders = Orders::where('customer_id', auth('customer')->id())->get();
         return view('frontend.daftar_pesanan', compact('orders'));
+    }
+
+    public function myProfile()
+    {
+        return view('frontend.profile');
     }
 }

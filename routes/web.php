@@ -40,11 +40,16 @@ Route::post('register-process', [AuthController::class, 'registerProcess'])->nam
 
 
 Route::middleware(['auth:customer'])->group(function(){
-    Route::get('myProfile', [FrontendController::class, 'myProfile'])->name('frontend-myProfile');
     Route::get('buat_pesanan', [FrontendController::class, 'buat_pesanan'])->name('frontend-buat_pesanan');
     Route::post('buat_pesanan', [FrontendController::class, 'buat_pesananStore'])->name('frontend-buat_pesananStore');
+
+    Route::get('keranjang_belanja', [FrontendController::class, 'keranjangBelanja'])->name('frontend-keranjangBelanja');
+    Route::get('keranjang_belanja/hapus/{id}', [FrontendController::class, 'HapusKeranjangBelanja'])->name('frontend-HapusKeranjangBelanja');
+    Route::get('keranjang_belanja/konfirmasi/{id}', [FrontendController::class, 'konfirmasiKeranjang'])->name('frontend-konfirmasiKeranjang');
+    Route::post('keranjang_belanja/konfirmasi/{id}', [FrontendController::class, 'konfirmasiKeranjangStore'])->name('frontend-konfirmasiKeranjangStore');
+
     Route::get('daftar_pesanan', [FrontendController::class, 'daftar_pesananUser'])->name('frontend-daftar_pesananUser');
-    Route::post('/midtrans/webhook', [FrontendController::class, 'handleWebhook'])->name('midtrans.webhook');
+    Route::get('myProfile', [FrontendController::class, 'myProfile'])->name('frontend-myProfile');
 });
 
 Route::middleware(['auth:user'])->group(function(){

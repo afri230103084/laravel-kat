@@ -87,18 +87,23 @@
                             
                             @if (Auth::guard('customer')->check())
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-myProfile') }}">
-                                        <i data-feather="layers"> </i><span>Data Pribadi</span>
+                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-buat_pesanan') }}">
+                                        <i data-feather="folder-plus"> </i><span>Buat Pesanan</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-buat_pesanan') }}">
-                                        <i data-feather="layers"> </i><span>Buat Pesanan</span>
+                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-keranjangBelanja') }}">
+                                        <i data-feather="shopping-cart"> </i><span>Keranjang Belanja</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-daftar_pesananUser') }}">
-                                        <i data-feather="layers"> </i><span>Daftar Pesanan</span>
+                                        <i data-feather="shopping-bag"> </i><span>Daftar Pesanan</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-myProfile') }}">
+                                        <i data-feather="user"> </i><span>Profil Saya</span>
                                     </a>
                                 </li>
                                 

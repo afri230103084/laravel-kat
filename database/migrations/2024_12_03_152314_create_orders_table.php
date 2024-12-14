@@ -15,19 +15,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->string('kode_transaksi')->unique();
-            $table->enum('status', ['baru', 'menunggu', 'dibuat', 'diantar', 'selesai', 'batal', 'transaksi_selesai'])->default('baru');
-            $table->enum('jenis_pengambilan', ['diantar', 'diambil']);
-            $table->enum('metode_pembayaran', ['cash', 'transfer']);
+            $table->enum('status', ['draft', 'baru', 'menunggu', 'dibuat', 'diantar', 'selesai', 'batal', 'transaksi_selesai'])->default('draft');
+            $table->enum('jenis_pengambilan', ['diantar', 'diambil'])->nullable();
+            $table->enum('metode_pembayaran', ['cash', 'transfer'])->nullable();
             $table->enum('status_pembayaran', ['dp', 'lunas'])->default('dp');
             $table->string('bukti_pembayaran')->nullable();
             $table->decimal('total_harga', 15, 2);
             $table->decimal('jumlah_dibayar', 15, 2)->nullable();
-            $table->text('alamat');
-            $table->date('tanggal_acara');
-            $table->time('waktu_acara');
+            $table->text('alamat')->nullable();
+            $table->date('tanggal_acara')->nullable();
+            $table->time('waktu_acara')->nullable();
             $table->text('catatan')->nullable();
-            $table->string('midtrans_transaction_id')->nullable();
-            $table->string('midtrans_status')->nullable();
             $table->timestamps();
         });
     }
