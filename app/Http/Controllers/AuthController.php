@@ -16,22 +16,24 @@ class AuthController extends Controller
 
     public function loginProcess(Request $request)
     {
-        if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])){
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::guard('customer')->attempt($credentials)) {
             return redirect()->route('frontend-daftar_pesananUser');
-        } elseif (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])){
-            return redirect()->route('dashboard');
-        } else{
-            return redirect()->back();
         }
+
+        if (Auth::guard('user')->attempt($credentials)) {
+            return redirect()->route('dashboard');
+        }
+
+        return redirect()->back();
     }
 
     public function logoutProcess(Request $request)
     {
-        if (Auth::guard('customer')->check()){
-            Auth::guard('customer')->logout();
-        } elseif (Auth::guard('user')->check()){
-            Auth::guard('user')->logout();
-        }
+        Auth::guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }

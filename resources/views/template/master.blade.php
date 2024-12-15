@@ -85,7 +85,7 @@
                                 <div class="mobile-back text-right"><span>Back</span><i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
                             </li>
                             
-                            @if (Auth::guard('customer')->check())
+                            @if(Auth::guard('customer')->check())
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-buat_pesanan') }}">
                                         <i data-feather="folder-plus"> </i><span>Buat Pesanan</span>
@@ -101,8 +101,9 @@
                                         <i data-feather="shopping-bag"> </i><span>Daftar Pesanan</span>
                                     </a>
                                 </li>
+                            @endif
                                 
-                            @elseif (Auth::guard('user')->check())
+                            @if(Auth::guard('user')->check())
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="{{ route('dashboard') }}">
                                         <i data-feather="home"> </i><span>Dashboard</span>

@@ -14,13 +14,6 @@ class Authenticate extends Middleware
             return null;
         }
 
-        if (Auth::guard('customer')->check()) {
-            return route('frontend-daftar_pesananUser');
-        }
-        if (Auth::guard('user')->check()) {
-            return route('dashboard');
-        }
-
         return route('login');
     }
 }

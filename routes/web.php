@@ -39,7 +39,7 @@ Route::post('register-process', [AuthController::class, 'registerProcess'])->nam
 
 
 
-Route::middleware(['auth:customer'])->group(function(){
+Route::middleware(['role:customer'])->group(function(){
     Route::get('buat_pesanan', [FrontendController::class, 'buat_pesanan'])->name('frontend-buat_pesanan');
     Route::post('buat_pesanan', [FrontendController::class, 'buat_pesananStore'])->name('frontend-buat_pesananStore');
 
@@ -51,7 +51,9 @@ Route::middleware(['auth:customer'])->group(function(){
     Route::get('daftar_pesanan', [FrontendController::class, 'daftar_pesananUser'])->name('frontend-daftar_pesananUser');
 });
 
-Route::middleware(['auth:user'])->group(function(){
+
+
+Route::middleware(['role:admin'])->group(function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('confirm-indexPesananMasukA');
     
