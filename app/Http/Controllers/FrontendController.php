@@ -66,7 +66,7 @@ class FrontendController extends Controller
     public function keranjangBelanja()
     {
         $orders = Orders::where('status', 'draft')
-            ->where('customer_id', auth()->user()->id)
+            ->where('customer_id', auth('customer')->id())
             ->get();
 
         return view('frontend.keranjang_belanja', compact('orders'));
@@ -120,8 +120,10 @@ class FrontendController extends Controller
 
     public function daftar_pesananUser()
     {
-        Log::info('Halaman daftar pesanan user diakses.', ['customer_id' => auth('customer')->id()]);
-        $orders = Orders::where('customer_id', auth('customer')->id())->get();
+        $orders = Orders::whereIn('status', ['baru', 'menunggu', 'dibuat', 'diantar', 'selesai', 'batal', 'transaksi_selesai'])
+            ->where('customer_id', auth('customer')->id())
+            ->get();
+            
         return view('frontend.daftar_pesanan', compact('orders'));
     }
 

@@ -49,7 +49,6 @@ Route::middleware(['auth:customer'])->group(function(){
     Route::post('keranjang_belanja/konfirmasi/{id}', [FrontendController::class, 'konfirmasiKeranjangStore'])->name('frontend-konfirmasiKeranjangStore');
 
     Route::get('daftar_pesanan', [FrontendController::class, 'daftar_pesananUser'])->name('frontend-daftar_pesananUser');
-    Route::get('myProfile', [FrontendController::class, 'myProfile'])->name('frontend-myProfile');
 });
 
 Route::middleware(['auth:user'])->group(function(){

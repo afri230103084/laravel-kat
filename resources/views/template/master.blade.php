@@ -101,11 +101,6 @@
                                         <i data-feather="shopping-bag"> </i><span>Daftar Pesanan</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('frontend-myProfile') }}">
-                                        <i data-feather="user"> </i><span>Profil Saya</span>
-                                    </a>
-                                </li>
                                 
                             @elseif (Auth::guard('user')->check())
                                 <li class="sidebar-list">

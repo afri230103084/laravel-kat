@@ -17,7 +17,7 @@ class AuthController extends Controller
     public function loginProcess(Request $request)
     {
         if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])){
-            return redirect()->route('frontend-myProfile');
+            return redirect()->route('frontend-daftar_pesananUser');
         } elseif (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])){
             return redirect()->route('dashboard');
         } else{
