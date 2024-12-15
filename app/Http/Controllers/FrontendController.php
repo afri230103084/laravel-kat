@@ -26,7 +26,7 @@ class FrontendController extends Controller
         ]);
 
         $order = Orders::create([
-            'customer_id' => auth()->id(),
+            'customer_id' => auth()->guard('customer')->id(),
             'total_harga' => 0,
             'status' => 'draft',
             'kode_transaksi' => $this->generateKodeTransaksi(),
@@ -52,7 +52,7 @@ class FrontendController extends Controller
 
         $order->update(['total_harga' => $totalHarga]);
 
-        return redirect()->route('frontend-daftar_pesananUser');
+        return redirect()->route('frontend-keranjangBelanja');
     }
 
     private function generateKodeTransaksi()
@@ -66,7 +66,7 @@ class FrontendController extends Controller
     public function keranjangBelanja()
     {
         $orders = Orders::where('status', 'draft')
-            ->where('customer_id', auth('customer')->id())
+            ->where('customer_id', auth()->guard('customer')->id())
             ->get();
 
         return view('frontend.keranjang_belanja', compact('orders'));
@@ -121,7 +121,7 @@ class FrontendController extends Controller
     public function daftar_pesananUser()
     {
         $orders = Orders::whereIn('status', ['baru', 'menunggu', 'dibuat', 'diantar', 'selesai', 'batal', 'transaksi_selesai'])
-            ->where('customer_id', auth('customer')->id())
+            ->where('customer_id', auth()->guard('customer')->id())
             ->get();
             
         return view('frontend.daftar_pesanan', compact('orders'));
