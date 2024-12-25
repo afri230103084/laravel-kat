@@ -18,27 +18,27 @@
             @csrf
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Nama Pengeluaran</label>
                             <input class="form-control" name="nama" type="text" placeholder="Masukkan nama pengeluaran" required autocomplete="off">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Jumlah</label>
                             <input class="form-control" name="jumlah" type="number" placeholder="Masukkan jumlah pengeluaran" required>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Tanggal Pengeluaran</label>
                             <input class="form-control" name="tanggal_pengeluaran" type="date" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Deskripsi</label>
                             <textarea class="form-control" name="deskripsi" rows="3" placeholder="Masukkan deskripsi pengeluaran"></textarea>

@@ -93,9 +93,9 @@ Route::middleware(['role:admin'])->group(function(){
     Route::get('pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran-index');
     Route::get('pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran-create');
     Route::post('pengeluaran/create', [ExpenseController::class, 'store'])->name('pengeluaran-store');
-    Route::get('pengeluaran/edit/{id}', [ExpenseController::class, 'edit'])->name('pengeluaran-edit');
-    Route::post('pengeluaran/update/{id}', [ExpenseController::class, 'update'])->name('pengeluaran-update');
-    Route::get('pengeluaran/hapus/{id}', [ExpenseController::class, 'destroy'])->name('pengeluaran-destroy');
+    Route::get('pengeluaran/edit/{expense}', [ExpenseController::class, 'edit'])->name('pengeluaran-edit');
+    Route::post('pengeluaran/update/{expense}', [ExpenseController::class, 'update'])->name('pengeluaran-update');
+    Route::get('pengeluaran/hapus/{expense}', [ExpenseController::class, 'destroy'])->name('pengeluaran-destroy');
     
     Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
     Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
