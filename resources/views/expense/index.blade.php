@@ -45,9 +45,13 @@
                                 <a href="{{ route('pengeluaran-edit', $item) }}" class="text-warning">
                                     <i data-feather="edit"></i>
                                 </a>
-                                <a href="{{ route('pengeluaran-destroy', $item) }}" class="text-danger">
-                                    <i data-feather="trash"></i>
-                                </a>
+                                <form action="{{ route('pengeluaran-destroy', $item) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-danger bg-transparent border-0 p-0">
+                                        <i data-feather="trash"></i>
+                                    </button>
+                                </form>                                
                             </td>
                         </tr>
                         @endforeach
