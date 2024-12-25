@@ -48,7 +48,7 @@
                             <div class="form-group">
                                 <label>Metode Pembayaran</label>
                                 <select class="js-example-basic-single col-sm-12" name="metode_pembayaran">
-                                    <option value="transfer" {{ old('metode_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                                    <option value="transfer" {{ old('metode_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer - BRI - 1234567890</option>
                                 </select>
                             </div>
                         </div>                        

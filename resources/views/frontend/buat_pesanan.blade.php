@@ -73,13 +73,20 @@
         color: #333;
     }
 
+    @media (max-width: 480px) {
+    .col-lg-4.col-md-4.col-sm-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
     @media (max-width: 768px) {
         .row.g-4 > [class^="col"] {
             padding-bottom: 10px;
         }
-        .col-lg-3.col-md-4.col-sm-6 {
-            flex: 0 0 100%;
-            max-width: 100%;
+        .col-lg-4.col-md-4.col-sm-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
         }
         .menu-item {
             margin-bottom: 15px;
@@ -126,7 +133,7 @@
                 <div class="form-group">
                     <div id="menu-items" class="row g-4">
                         @foreach ($product as $item)
-                            <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="col-lg-4 col-md-4 col-sm-6">
                                 <div class="card menu-item shadow-sm h-100" data-harga="{{ $item->harga }}">
                                     <img src="{{ asset('storage/'.$item->foto) }}" class="card-img-top" alt="{{ $item->nama }}" style="height: 200px; object-fit: cover;">
                                     <div class="card-body text-center">

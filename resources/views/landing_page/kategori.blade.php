@@ -6,7 +6,7 @@
         @forelse ($categories as $category)
         <div class="col-md-4 col-sm-6 mb-4">
             <div class="card shadow-sm h-100">
-                <img src="{{ $category->foto ?? 'https://via.placeholder.com/300x200' }}" class="card-img-top" alt="Foto Kategori {{ $category->nama }}">
+                <img src="{{ asset('cuba') }}/assets/images/login/tess.jpg" class="card-img-top" alt="Foto Kategori {{ $category->nama }}">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $category->nama }}</h5>
                     <p class="card-text text-muted">{{ $category->deskripsi ?: 'Tidak ada deskripsi tersedia.' }}</p>
