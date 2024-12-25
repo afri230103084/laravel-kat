@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
+    private function validateExpense(Request $request)
+    {
+        return $request->validate([
+            'nama' => 'required|string',
+            'jumlah' => 'required|numeric',
+            'tanggal_pengeluaran' => 'required|date',
+            'deskripsi' => 'nullable|string',
+        ]);
+    }
+
     public function index()
     {
-        $data = Expense::all();
+        $data = Expense::paginate(15);
         return view('expense.index', compact('data'));
     }
 
@@ -20,54 +30,28 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jumlah' => 'required|numeric',
-            'tanggal_pengeluaran' => 'required|date',
-            'deskripsi' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateExpense($request);
+        Expense::create($validatedData);
 
-        Expense::create([
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'jumlah' => $request->jumlah,
-            'tanggal_pengeluaran' => $request->tanggal_pengeluaran,
-        ]);
-
-        return redirect()->route('pengeluaran-index');
+        return redirect()->route('pengeluaran-index')->with('success', 'Pengeluaran berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Expense $expense)
     {
-        $expense = Expense::findOrFail($id);
         return view('expense.edit', compact('expense'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Expense $expense)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jumlah' => 'required|numeric',
-            'tanggal_pengeluaran' => 'required|date',
-            'deskripsi' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateExpense($request);
+        $expense->update($validatedData);
 
-        $expense = Expense::findOrFail($id);
-        $expense->update([
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'jumlah' => $request->jumlah,
-            'tanggal_pengeluaran' => $request->tanggal_pengeluaran,
-        ]);
-
-        return redirect()->route('pengeluaran-index');
+        return redirect()->route('pengeluaran-index')->with('success', 'Pengeluaran berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Expense $expense)
     {
-        $expense = Expense::findOrFail($id);
         $expense->delete();
-
-        return redirect()->route('pengeluaran-index');
+        return redirect()->route('pengeluaran-index')->with('success', 'Pengeluaran berhasil dihapus.');
     }
 }
