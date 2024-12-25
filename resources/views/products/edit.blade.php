@@ -74,7 +74,7 @@
                             <input class="form-control" name="foto" type="file" accept="image/*">
                             @if($produk->foto)
                                 <div class="mt-3 text-center">
-                                    <img src="{{ asset('storage/' . $produk->foto) }}" 
+                                    <img src="{{ asset('storage/' . $produk->foto) }}"
                                          alt="Foto Menu" 
                                          class="img-thumbnail rounded shadow-sm"
                                          style="max-width: 250px; max-height: 250px; object-fit: cover;">

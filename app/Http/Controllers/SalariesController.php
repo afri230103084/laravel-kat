@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\DB;
 
 class SalariesController extends Controller
 {
+    private function validateSalary(Request $request)
+    {
+        return $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'salary_date' => 'required|date',
+        ]);
+    }
+
     public function index()
     {
-        $data = DB::table('salaries')
-        ->join('employees', 'salaries.employee_id', '=', 'employees.id')
-        ->select('salaries.*', 'employees.nama')
-        ->get();
+        $data = Salaries::with('employee')->get();
 
         return view('salary.index', compact('data'));
     }
@@ -27,28 +32,23 @@ class SalariesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'salary_date' => 'required|date',
-        ]);
-
-        $employee = Employees::findOrFail($request->employee_id);
+        $validatedData = $this->validateSalary($request);
+        $employee = Employees::findOrFail($validatedData['employee_id']);
         $amount = $employee->gaji;
 
         Salaries::create([
-            'employee_id' => $request->employee_id,
+            'employee_id' => $validatedData['employee_id'],
             'amount' => $amount,
-            'salary_date' => $request->salary_date,
+            'salary_date' => $validatedData['salary_date'],
         ]);
 
-        return redirect()->route('gaji-index');
+        return redirect()->route('gaji-index')->with('success', 'Gaji berhasil ditambahkan.');
     }
 
-    public function destroy($id)
+    public function destroy(Salaries $salary)
     {
-        $gaji = Salaries::findOrFail($id);
-        $gaji->delete();
+        $salary->delete();
 
-        return redirect()->route('gaji-index');
+        return redirect()->route('gaji-index')->with('success', 'Gaji berhasil dihapus.');
     }
 }

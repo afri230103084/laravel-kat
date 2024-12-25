@@ -8,6 +8,23 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployeesController extends Controller
 {
+    private function validateEmployee(Request $request, $id = null)
+    {
+        $uniqueEmail = $id ? 'unique:employees,email,' . $id : 'unique:employees,email';
+        
+        return $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => ['required', 'email', $uniqueEmail],
+            'telepon' => 'required|string|max:15',
+            'jabatan' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'gaji' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg',
+            'no_ktp' => 'nullable|string|max:50',
+            'tanggal_masuk' => 'required|date',
+        ]);
+    }
+
     public function index()
     {
         $data = Employees::all();
@@ -21,93 +38,45 @@ class EmployeesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'telepon' => 'required|string|max:15',
-            'jabatan' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'gaji' => 'required|numeric|min:0',
-            'foto' => 'required|image|mimes:jpeg,png,jpg',
-            'no_ktp' => 'nullable|string|max:50',
-            'tanggal_masuk' => 'required|date',
-        ]);
+        $validatedData = $this->validateEmployee($request);
 
-        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('karyawan', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('karyawan', 'public');
         }
 
-        Employees::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'telepon' => $request->telepon,
-            'jabatan' => $request->jabatan,
-            'alamat' => $request->alamat,
-            'gaji' => $request->gaji,
-            'foto' => $fotoPath,
-            'no_ktp' => $request->no_ktp,
-            'tanggal_masuk' => $request->tanggal_masuk,
-        ]);
+        Employees::create($validatedData);
 
-        return redirect()->route('karyawan-index');
+        return redirect()->route('karyawan-index')->with('success', 'Karyawan berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Employees $employees)
     {
-        $karyawan = Employees::findOrFail($id);
-        return view('employees.edit', compact('karyawan'));
+        return view('employees.edit', compact('employees'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Employees $employees)
     {
-        $karyawan = Employees::findOrFail($id);
+        $validatedData = $this->validateEmployee($request, $employees->id);
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email,' . $karyawan->id,
-            'telepon' => 'required|string|max:15',
-            'jabatan' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'gaji' => 'required|numeric|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'no_ktp' => 'nullable|string|max:50',
-            'tanggal_masuk' => 'required|date',
-        ]);
-
-        $fotoPath = $karyawan->foto;
         if ($request->hasFile('foto')) {
-            if ($fotoPath) {
-                Storage::disk('public')->delete($fotoPath);
+            if ($employees->foto) {
+                Storage::disk('public')->delete($employees->foto);
             }
-            $fotoPath = $request->file('foto')->store('karyawan', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('karyawan', 'public');
         }
 
-        $karyawan->update([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'telepon' => $request->telepon,
-            'jabatan' => $request->jabatan,
-            'alamat' => $request->alamat,
-            'gaji' => $request->gaji,
-            'foto' => $fotoPath,
-            'no_ktp' => $request->no_ktp,
-            'tanggal_masuk' => $request->tanggal_masuk,
-        ]);
+        $employees->update($validatedData);
 
-        return redirect()->route('karyawan-index');
+        return redirect()->route('karyawan-index')->with('success', 'Data karyawan diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Employees $employees)
     {
-        $karyawan = Employees::findOrFail($id);
-
-        if ($karyawan->foto) {
-            Storage::disk('public')->delete($karyawan->foto);
+        if ($employees->foto) {
+            Storage::disk('public')->delete($employees->foto);
         }
-
-        $karyawan->delete();
-
-        return redirect()->route('karyawan-index');
+        $employees->delete();
+        
+        return redirect()->route('karyawan-index')->with('success', 'Karyawan dihapus.');
     }
 }

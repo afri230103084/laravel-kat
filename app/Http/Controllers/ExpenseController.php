@@ -19,7 +19,7 @@ class ExpenseController extends Controller
 
     public function index()
     {
-        $data = Expense::paginate(15);
+        $data = Expense::all();
         return view('expense.index', compact('data'));
     }
 

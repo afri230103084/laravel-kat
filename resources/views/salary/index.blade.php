@@ -3,6 +3,15 @@
 
 @section('content')
 <div class="col-sm-12">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #3CB371; color: white; border-left: 5px solid #2E7D32;">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Data Gaji Karyawan</h4>
         <a href="{{ route('gaji-create') }}" class="btn btn-primary">Tambah Gaji</a>
@@ -27,13 +36,17 @@
                         @foreach ($data as $gaji)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $gaji->nama }}</td>
+                                <td>{{ $gaji->employee->nama }}</td>
                                 <td>Rp. {{ number_format($gaji->amount, 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($gaji->salary_date)->format('d M Y') }}</td>
                                 <td>
-                                    <a href="{{ route('gaji-destroy', $gaji->id) }}" class="text-danger">
-                                        <i data-feather="trash"></i>
-                                    </a>
+                                    <form action="{{ route('gaji-destroy', $gaji) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-danger bg-transparent border-0 p-0">
+                                            <i data-feather="trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

@@ -57,12 +57,14 @@ Route::middleware(['role:admin'])->group(function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('confirm-indexPesananMasukA');
     
+    
     Route::get('kategori', [CategoriesController::class, 'index'])->name('kategori-index');
     Route::get('kategori/create', [CategoriesController::class, 'create'])->name('kategori-create');
     Route::post('kategori/create', [CategoriesController::class, 'store'])->name('kategori-store');
     Route::get('kategori/edit/{id}', [CategoriesController::class, 'edit'])->name('kategori-edit');
     Route::post('kategori/update/{id}', [CategoriesController::class, 'update'])->name('kategori-update');
     Route::get('kategori/hapus/{id}', [CategoriesController::class, 'destroy'])->name('kategori-destroy');
+
     
     Route::get('produk', [ProductsController::class, 'index'])->name('produk-index');
     Route::get('produk/create', [ProductsController::class, 'create'])->name('produk-create');
@@ -77,25 +79,7 @@ Route::middleware(['role:admin'])->group(function(){
     Route::get('pelanggan/edit/{id}', [CustomersController::class, 'edit'])->name('pelanggan-edit');
     Route::post('pelanggan/update/{id}', [CustomersController::class, 'update'])->name('pelanggan-update');
     Route::get('pelanggan/hapus/{id}', [CustomersController::class, 'destroy'])->name('pelanggan-destroy');
-    
-    Route::get('karyawan', [EmployeesController::class, 'index'])->name('karyawan-index');
-    Route::get('karyawan/create', [EmployeesController::class, 'create'])->name('karyawan-create');
-    Route::post('karyawan/create', [EmployeesController::class, 'store'])->name('karyawan-store');
-    Route::get('karyawan/edit/{id}', [EmployeesController::class, 'edit'])->name('karyawan-edit');
-    Route::post('karyawan/update/{id}', [EmployeesController::class, 'update'])->name('karyawan-update');
-    Route::get('karyawan/hapus/{id}', [EmployeesController::class, 'destroy'])->name('karyawan-destroy');
-    
-    Route::get('gaji', [SalariesController::class, 'index'])->name('gaji-index');
-    Route::get('gaji/create', [SalariesController::class, 'create'])->name('gaji-create');
-    Route::post('gaji/create', [SalariesController::class, 'store'])->name('gaji-store');
-    Route::get('gaji/hapus/{id}', [SalariesController::class, 'destroy'])->name('gaji-destroy');
 
-    Route::get('pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran-index');
-    Route::get('pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran-create');
-    Route::post('pengeluaran/create', [ExpenseController::class, 'store'])->name('pengeluaran-store');
-    Route::get('pengeluaran/edit/{expense}', [ExpenseController::class, 'edit'])->name('pengeluaran-edit');
-    Route::post('pengeluaran/update/{expense}', [ExpenseController::class, 'update'])->name('pengeluaran-update');
-    Route::delete('pengeluaran/hapus/{expense}', [ExpenseController::class, 'destroy'])->name('pengeluaran-destroy');
     
     Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
     Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
@@ -113,6 +97,26 @@ Route::middleware(['role:admin'])->group(function(){
 
     Route::get('pesanan-diantar', [StatusController::class, 'indexPesananDiantar'])->name('index-indexPesananDiantar');
     Route::post('pesanan-diantar/confirm/{id}', [StatusController::class, 'indexPesananDiantarA'])->name('index-indexPesananDiantarA');
+
+    // sudah direvisi
+    Route::get('karyawan', [EmployeesController::class, 'index'])->name('karyawan-index');
+    Route::get('karyawan/create', [EmployeesController::class, 'create'])->name('karyawan-create');
+    Route::post('karyawan/create', [EmployeesController::class, 'store'])->name('karyawan-store');
+    Route::get('karyawan/edit/{employees}', [EmployeesController::class, 'edit'])->name('karyawan-edit');
+    Route::post('karyawan/update/{employees}', [EmployeesController::class, 'update'])->name('karyawan-update');
+    Route::delete('karyawan/hapus/{employees}', [EmployeesController::class, 'destroy'])->name('karyawan-destroy');
+    
+    Route::get('gaji', [SalariesController::class, 'index'])->name('gaji-index');
+    Route::get('gaji/create', [SalariesController::class, 'create'])->name('gaji-create');
+    Route::post('gaji/create', [SalariesController::class, 'store'])->name('gaji-store');
+    Route::delete('gaji/hapus/{salary}', [SalariesController::class, 'destroy'])->name('gaji-destroy');
+
+    Route::get('pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran-index');
+    Route::get('pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran-create');
+    Route::post('pengeluaran/create', [ExpenseController::class, 'store'])->name('pengeluaran-store');
+    Route::get('pengeluaran/edit/{expense}', [ExpenseController::class, 'edit'])->name('pengeluaran-edit');
+    Route::post('pengeluaran/update/{expense}', [ExpenseController::class, 'update'])->name('pengeluaran-update');
+    Route::delete('pengeluaran/hapus/{expense}', [ExpenseController::class, 'destroy'])->name('pengeluaran-destroy');
 
     Route::get('laporan_penjualan', [SalesReportController::class, 'index'])->name('laporan_penjualan-index');
 });
