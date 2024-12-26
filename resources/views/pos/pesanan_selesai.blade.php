@@ -12,7 +12,7 @@
         </button>
     </div>
     @endif
-    
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Pesanan Selesai</h4>
     </div>
@@ -37,7 +37,7 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
+                                <td>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
                                     <span class="badge badge-success">
                                         {{ ucfirst($order->status) }}
@@ -80,7 +80,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="{{ route('index-indexPesananSelesaiB', $order->id) }}" method="post">
+            <form action="{{ route('order.finalizeTransaksi', $order) }}" method="post">
                 @csrf
                 <div class="modal-body">
                     <ul class="list-group">
@@ -90,7 +90,7 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>Nama Pelanggan</span>
-                            <strong>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</strong>
+                            <strong>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>Tanggal Acara</span>
@@ -166,7 +166,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="jumlah_pembayaran">Jumlah Pembayaran</label>
-                                    <input type="number" class="form-control"  id="jumlah_pembayaran{{ $order->id }}" name="jumlah_pembayaran" placeholder="Masukkan jumlah pembayaran" value="{{ old('jumlah_pembayaran') }}" required oninput="checkPayment({{ $order->total_harga }}, {{ $order->jumlah_dibayar }}, '{{ $order->id }}')">
+                                    <input type="number" class="form-control"  id="jumlah_pembayaran{{ $order->id }}" name="jumlah_pembayaran" placeholder="Masukkan jumlah pembayaran" required oninput="checkPayment({{ $order->total_harga }}, {{ $order->jumlah_dibayar }}, '{{ $order->id }}')">
                                     <small id="status-pembayaran-info{{ $order->id }}" class="text-muted"></small>
                                 </div>
                             </div>
@@ -184,7 +184,10 @@
                     </div>
                     <div class="text-right w-100 mb-3">
                         @if ($order->jenis_pengambilan == 'diantar')
-                            <a href="/pesanan-selesai/confirm/{{ $order->id }}" class="btn btn-success btn-sm">Jadwalkan Pengiriman</a>
+                            <form action="{{ route('order.jadwalkanPengiriman', $order) }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm">Jadwalkan Pengiriman</button>
+                            </form>
                         @else
                             <button type="submit" class="btn btn-success btn-sm">Transaksi Selesai</button>
                         @endif

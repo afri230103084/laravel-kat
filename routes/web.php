@@ -71,9 +71,9 @@ Route::middleware(['role:admin'])->group(function () {
         Route::get('pesanan_dibuat', 'indexPesananDibuat')->name('order.indexPesananDibuat');
         Route::post('pesanan_dibuat/{orders}/confirm', 'selesaikanPesanan')->name('order.selesaikanPesanan');
 
-        Route::get('pesanan-selesai', 'indexPesananSelesai')->name('index-indexPesananSelesai');
-        Route::get('pesanan-selesai/confirm/{id}', 'indexPesananSelesaiA')->name('index-indexPesananSelesaiA');
-        Route::post('pesanan-selesai/finalize/{id}', 'indexPesananSelesaiB')->name('index-indexPesananSelesaiB');
+        Route::get('pesanan_selesai', 'indexPesananSelesai')->name('order.indexPesananSelesai');
+        Route::post('pesanan_selesai/{orders}/confirm', 'jadwalkanPengiriman')->name('order.jadwalkanPengiriman');
+        Route::post('pesanan_selesai/{orders}/finalize', 'finalizeTransaksi')->name('order.finalizeTransaksi');
 
         Route::get('pesanan-diantar', 'indexPesananDiantar')->name('index-indexPesananDiantar');
         Route::post('pesanan-diantar/confirm/{id}', 'indexPesananDiantarA')->name('index-indexPesananDiantarA');

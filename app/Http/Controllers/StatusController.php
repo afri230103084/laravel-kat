@@ -55,7 +55,7 @@ class StatusController extends Controller
 
     public function indexPesananSelesai()
     {
-        $orders = Orders::with('customers')->with('order_items.product')
+        $orders = Orders::with('customer')->with('order_items.product')
             ->where('orders.status', 'selesai')
             ->get();
 
@@ -64,40 +64,37 @@ class StatusController extends Controller
         ]);
     }
 
-    public function indexPesananSelesaiA($id)
+    public function jadwalkanPengiriman(Orders $orders)
     {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'diantar';
-        $data->save();
+        $orders->status = 'diantar';
+        $orders->save();
 
-        return redirect()->route('index-indexPesananSelesai');
+        return redirect()->route('order.indexPesananSelesai')->with('success', 'Pesanan dijadwalkan untuk pengiriman');
     }
 
-    public function indexPesananSelesaiB(Request $request, $id)
+    public function finalizeTransaksi(Request $request, Orders $orders)
     {
-        $data = Orders::findOrFail($id);
-
-        if ($data->status_pembayaran === 'lunas') {
-            $data->status = 'transaksi_selesai';
-            $data->save();
-            return redirect()->route('index-indexPesananSelesai');
+        if ($orders->status_pembayaran === 'lunas') {
+            $orders->status = 'transaksi_selesai';
+            $orders->save();
+            return redirect()->route('order.indexPesananSelesai')->with('success', 'Transaksi selesai');
         }
 
         if ($request->has('jumlah_pembayaran')) {
             $jumlah_pembayaran = $request->input('jumlah_pembayaran');
-            $data->jumlah_dibayar += $jumlah_pembayaran;
+            $orders->jumlah_dibayar += $jumlah_pembayaran;
 
-            if ($data->jumlah_dibayar >= $data->total_harga) {
-                $data->status_pembayaran = 'lunas';
+            if ($orders->jumlah_dibayar >= $orders->total_harga) {
+                $orders->status_pembayaran = 'lunas';
             }
         } else {
             return redirect()->back();
         }
 
-        $data->status = 'transaksi_selesai';
-        $data->save();
+        $orders->status = 'transaksi_selesai';
+        $orders->save();
 
-        return redirect()->route('index-indexPesananSelesai');
+        return redirect()->route('order.indexPesananSelesai')->with('success', 'Transaksi selesai');
     }
 
     public function indexPesananDiantar()
