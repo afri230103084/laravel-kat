@@ -27,12 +27,12 @@
                         @foreach ($orders as $order)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</td>
+                            <td>{{ optional($order->customer)->nama ?? 'Tidak Diketahui' }}</td>
                             <td>{{ $order->kode_transaksi }}</td>
                             <td>{{ ucfirst($order->jenis_pengambilan) }}</td>
                             <td>{{ ucfirst($order->metode_pembayaran) }}</td>
-                            <td>{{ number_format($order->total_harga, 2) }}</td>
-                            <td>{{ number_format($order->jumlah_dibayar, 2) }}</td>
+                            <td>{{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                            <td>{{ number_format($order->jumlah_dibayar, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

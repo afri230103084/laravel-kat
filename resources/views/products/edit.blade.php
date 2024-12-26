@@ -14,7 +14,7 @@
 </div>
 <div class="col-sm-12">
     <div class="card">
-        <form class="needs-validation" action="{{ route('produk-update', $produk->id) }}" method="POST" enctype="multipart/form-data">
+        <form class="needs-validation" action="{{ route('produk-update', $produk) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card-body">
                 <div class="row">

@@ -14,7 +14,7 @@
 </div>
 <div class="col-sm-12">
     <div class="card">
-        <form class="needs-validation" action="{{ route('kategori-update', $kategori->id) }}" method="POST">
+        <form class="needs-validation" action="{{ route('kategori-update', $kategori) }}" method="POST">
             @csrf
             <div class="card-body">
                 <div class="row">

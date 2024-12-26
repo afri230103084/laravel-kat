@@ -8,6 +8,20 @@ use Illuminate\Support\Facades\Hash;
 
 class CustomersController extends Controller
 {
+    private function validateCustomer(Request $request, $customer = null)
+    {
+        return $request->validate([
+            'nama' => 'required|string|max:150',
+            'telepon' => 'required|string|max:20|unique:customers,telepon,' . ($customer ? $customer->id : ''),
+            'alamat' => 'required|string',
+            'kota' => 'required|string|max:100',
+            'kode_pos' => 'required|string|max:10',
+            'provinsi' => 'required|string|max:100',
+            'tipe_akun' => 'required|in:individu,perusahaan,instansi',
+            'email' => 'required|email|unique:customers,email,' . ($customer ? $customer->id : ''),
+        ]);
+    }
+
     public function index()
     {
         $data = Customers::all();
@@ -21,81 +35,42 @@ class CustomersController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:150',
-            'telepon' => 'required|string|max:20|unique:customers,telepon',
-            'alamat' => 'required|string',
-            'kota' => 'required|string|max:100',
-            'kode_pos' => 'required|string|max:10',
-            'provinsi' => 'required|string|max:100',
-            'tipe_akun' => 'required|in:individu,perusahaan,instansi',
-            'email' => 'required|email|unique:customers,email',
-        ]);
+        $validatedData = $this->validateCustomer($request);
 
-        $password = $this->generateSimplePassword($request->nama);
+        $password = $validatedData['telepon'];
 
         Customers::create([
-            'nama' => $request->nama,
-            'telepon' => $request->telepon,
-            'alamat' => $request->alamat,
-            'kota' => $request->kota,
-            'kode_pos' => $request->kode_pos,
-            'provinsi' => $request->provinsi,
-            'tipe_akun' => $request->tipe_akun,
-            'email' => $request->email,
+            'nama' => $validatedData['nama'],
+            'telepon' => $validatedData['telepon'],
+            'alamat' => $validatedData['alamat'],
+            'kota' => $validatedData['kota'],
+            'kode_pos' => $validatedData['kode_pos'],
+            'provinsi' => $validatedData['provinsi'],
+            'tipe_akun' => $validatedData['tipe_akun'],
+            'email' => $validatedData['email'],
             'password' => Hash::make($password),
             'password_plain' => $password,
         ]);
 
-        return redirect()->route('pelanggan-index');
+        return redirect()->route('pelanggan-index')->with('success', 'Pelanggan berhasil ditambahkan.');
     }
 
-    protected function generateSimplePassword($nama)
+    public function edit(Customers $customer)
     {
-        $firstName = strtok($nama, ' ');
-        $randomNumber = rand(100, 999);
-        return strtolower($firstName) . $randomNumber;
-    }
-
-    public function edit($id)
-    {
-        $customer = Customers::findOrFail($id);
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Customers $customer)
     {
-        $request->validate([
-            'nama' => 'required|string|max:150',
-            'telepon' => 'required|string|max:20|unique:customers,telepon,' . $id,
-            'alamat' => 'required|string',
-            'kota' => 'required|string|max:100',
-            'kode_pos' => 'required|string|max:10',
-            'provinsi' => 'required|string|max:100',
-            'tipe_akun' => 'required|in:individu,perusahaan,instansi',
-            'email' => 'required|email|unique:customers,email,' . $id,
-        ]);
+        $validatedData = $this->validateCustomer($request, $customer);
+        $customer->update($validatedData);
 
-        $customer = Customers::findOrFail($id);
-        $customer->update([
-            'nama' => $request->nama,
-            'telepon' => $request->telepon,
-            'alamat' => $request->alamat,
-            'kota' => $request->kota,
-            'kode_pos' => $request->kode_pos,
-            'provinsi' => $request->provinsi,
-            'tipe_akun' => $request->tipe_akun,
-            'email' => $request->email,
-        ]);
-
-        return redirect()->route('pelanggan-index');
+        return redirect()->route('pelanggan-index')->with('success', 'Pelanggan berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Customers $customer)
     {
-        $customer = Customers::findOrFail($id);
         $customer->delete();
-
-        return redirect()->route('pelanggan-index');
+        return redirect()->route('pelanggan-index')->with('success', 'Pelanggan berhasil dihapus.');
     }
 }

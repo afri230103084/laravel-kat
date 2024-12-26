@@ -14,7 +14,7 @@
 </div>
 <div class="col-sm-12">
     <div class="card">
-        <form class="needs-validation" action="{{ route('pelanggan-update', $customer->id) }}" method="POST">
+        <form class="needs-validation" action="{{ route('pelanggan-update', $customer) }}" method="POST">
             @csrf
             <div class="card-body">
                 <div class="row">

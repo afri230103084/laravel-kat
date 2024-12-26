@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
+    private function validateProduct(Request $request, $id = null)
+    {
+        return $request->validate([
+            'kategori_id' => 'required|exists:categories,id',
+            'nama' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'required|numeric',
+            'minimal_pesan' => 'required|numeric',
+            'status' => 'required|in:aktif,nonaktif',
+            'foto' => $id ? 'nullable|image|mimes:jpeg,png,jpg' : 'required|image|mimes:jpeg,png,jpg',
+        ]);
+    }
+
     public function index()
     {
         $produk = Products::all();
@@ -23,85 +36,48 @@ class ProductsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kategori_id' => 'required|exists:categories,id',
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|numeric',
-            'minimal_pesan' => 'required|numeric',
-            'status' => 'required|in:aktif,nonaktif',
-            'foto' => 'required|image|mimes:jpeg,png,jpg',
-        ]);
+        $validatedData = $this->validateProduct($request);
 
-        $filePath = null;
         if ($request->hasFile('foto')) {
-            $filePath = $request->file('foto')->store('menu-items', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('menu-items', 'public');
         }
 
-        Products::create([
-            'kategori_id' => $request->kategori_id,
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'minimal_pesan' => $request->minimal_pesan,
-            'status' => $request->status,
-            'foto' => $filePath,
-        ]);
+        Products::create($validatedData);
 
-        return redirect()->route('produk-index');
+        return redirect()->route('produk-index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Products $produk)
     {
-        $produk = Products::findOrFail($id);
         $categories = Categories::where('status', 'aktif')->get();
         return view('products.edit', compact('produk', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Products $produk)
     {
-        $request->validate([
-            'kategori_id' => 'required|exists:categories,id',
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|numeric',
-            'minimal_pesan' => 'required|numeric',
-            'status' => 'required|in:aktif,nonaktif',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg',
-        ]);
+        $validatedData = $this->validateProduct($request, $produk->id);
 
-        $produk = Products::findOrFail($id);
         if ($request->hasFile('foto')) {
             if ($produk->foto) {
                 Storage::disk('public')->delete($produk->foto);
             }
-            $filePath = $request->file('foto')->store('menu-items', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('menu-items', 'public');
         } else {
-            $filePath = $produk->foto;
+            $validatedData['foto'] = $produk->foto;
         }
 
-        $produk->update([
-            'kategori_id' => $request->kategori_id,
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'minimal_pesan' => $request->minimal_pesan,
-            'status' => $request->status,
-            'foto' => $filePath,
-        ]);
+        $produk->update($validatedData);
 
-        return redirect()->route('produk-index');
+        return redirect()->route('produk-index')->with('success', 'Data produk diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Products $produk)
     {
-        $produk = Products::findOrFail($id);
-
         if ($produk->foto) {
             Storage::disk('public')->delete($produk->foto);
         }
         $produk->delete();
 
-        return redirect()->route('produk-index');
+        return redirect()->route('produk-index')->with('success', 'Produk dihapus.');
     }
 }

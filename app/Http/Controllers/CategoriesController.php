@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
+    private function validateCategory(Request $request)
+    {
+        return $request->validate([
+            'nama' => 'required|string|max:255',
+            'status' => 'required|in:aktif,nonaktif',
+            'deskripsi' => 'nullable|string',
+        ]);
+    }
+
     public function index()
     {
         $data = Categories::all();
@@ -20,50 +29,28 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'status' => 'required|in:aktif,nonaktif',
-            'deskripsi' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateCategory($request);
+        Categories::create($validatedData);
 
-        Categories::create([
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'deskripsi' => $request->deskripsi,
-        ]);
-
-        return redirect()->route('kategori-index');
+        return redirect()->route('kategori-index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Categories $kategori)
     {
-        $kategori = Categories::findOrFail($id);
         return view('categories.edit', compact('kategori'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Categories $kategori)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'status' => 'required|in:aktif,nonaktif',
-            'deskripsi' => 'nullable|string',
-        ]);
+        $validatedData = $this->validateCategory($request);
+        $kategori->update($validatedData);
 
-        $kategori = Categories::findOrFail($id);
-        $kategori->update([
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'deskripsi' => $request->deskripsi,
-        ]);
-
-        return redirect()->route('kategori-index');
+        return redirect()->route('kategori-index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Categories $kategori)
     {
-        $kategori = Categories::findOrFail($id);
         $kategori->delete();
-
-        return redirect()->route('kategori-index');
+        return redirect()->route('kategori-index')->with('success', 'Kategori berhasil dihapus.');
     }
 }
