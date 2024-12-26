@@ -76,45 +76,59 @@ Route::middleware(['role:admin'])->group(function(){
 
 
     // sudah direvisi
-    Route::get('pelanggan', [CustomersController::class, 'index'])->name('pelanggan-index');
-    Route::get('pelanggan/create', [CustomersController::class, 'create'])->name('pelanggan-create');
-    Route::post('pelanggan/create', [CustomersController::class, 'store'])->name('pelanggan-store');
-    Route::get('pelanggan/edit/{customer}', [CustomersController::class, 'edit'])->name('pelanggan-edit');
-    Route::post('pelanggan/update/{customer}', [CustomersController::class, 'update'])->name('pelanggan-update');
-    Route::delete('pelanggan/hapus/{customer}', [CustomersController::class, 'destroy'])->name('pelanggan-destroy');
-    
-    Route::get('kategori', [CategoriesController::class, 'index'])->name('kategori-index');
-    Route::get('kategori/create', [CategoriesController::class, 'create'])->name('kategori-create');
-    Route::post('kategori/create', [CategoriesController::class, 'store'])->name('kategori-store');
-    Route::get('kategori/edit/{kategori}', [CategoriesController::class, 'edit'])->name('kategori-edit');
-    Route::post('kategori/update/{kategori}', [CategoriesController::class, 'update'])->name('kategori-update');
-    Route::delete('kategori/hapus/{kategori}', [CategoriesController::class, 'destroy'])->name('kategori-destroy');
+    Route::controller(CustomersController::class)->group(function () {
+        Route::get('pelanggan', 'index')->name('pelanggan-index');
+        Route::get('pelanggan/create', 'create')->name('pelanggan-create');
+        Route::post('pelanggan', 'store')->name('pelanggan-store');
+        Route::get('pelanggan/edit/{customer}', 'edit')->name('pelanggan-edit');
+        Route::put('pelanggan/{customer}', 'update')->name('pelanggan-update');
+        Route::delete('pelanggan/{customer}', 'destroy')->name('pelanggan-destroy');
+    });
 
-    Route::get('produk', [ProductsController::class, 'index'])->name('produk-index');
-    Route::get('produk/create', [ProductsController::class, 'create'])->name('produk-create');
-    Route::post('produk/create', [ProductsController::class, 'store'])->name('produk-store');
-    Route::get('produk/edit/{produk}', [ProductsController::class, 'edit'])->name('produk-edit');
-    Route::post('produk/update/{produk}', [ProductsController::class, 'update'])->name('produk-update');
-    Route::delete('produk/hapus/{produk}', [ProductsController::class, 'destroy'])->name('produk-destroy');
+    Route::controller(CategoriesController::class)->group(function () {
+        Route::get('kategori', 'index')->name('kategori-index');
+        Route::get('kategori/create', 'create')->name('kategori-create');
+        Route::post('kategori', 'store')->name('kategori-store');
+        Route::get('kategori/edit/{kategori}', 'edit')->name('kategori-edit');
+        Route::put('kategori/{kategori}', 'update')->name('kategori-update');
+        Route::delete('kategori/{kategori}', 'destroy')->name('kategori-destroy');
+    });
 
-    Route::get('karyawan', [EmployeesController::class, 'index'])->name('karyawan-index');
-    Route::get('karyawan/create', [EmployeesController::class, 'create'])->name('karyawan-create');
-    Route::post('karyawan/create', [EmployeesController::class, 'store'])->name('karyawan-store');
-    Route::get('karyawan/edit/{employees}', [EmployeesController::class, 'edit'])->name('karyawan-edit');
-    Route::post('karyawan/update/{employees}', [EmployeesController::class, 'update'])->name('karyawan-update');
-    Route::delete('karyawan/hapus/{employees}', [EmployeesController::class, 'destroy'])->name('karyawan-destroy');
-    
-    Route::get('gaji', [SalariesController::class, 'index'])->name('gaji-index');
-    Route::get('gaji/create', [SalariesController::class, 'create'])->name('gaji-create');
-    Route::post('gaji/create', [SalariesController::class, 'store'])->name('gaji-store');
-    Route::delete('gaji/hapus/{salary}', [SalariesController::class, 'destroy'])->name('gaji-destroy');
+    Route::controller(ProductsController::class)->group(function () {
+        Route::get('produk', 'index')->name('produk-index');
+        Route::get('produk/create', 'create')->name('produk-create');
+        Route::post('produk', 'store')->name('produk-store');
+        Route::get('produk/edit/{produk}', 'edit')->name('produk-edit');
+        Route::put('produk/{produk}', 'update')->name('produk-update');
+        Route::delete('produk/{produk}', 'destroy')->name('produk-destroy');
+    });
 
-    Route::get('pengeluaran', [ExpenseController::class, 'index'])->name('pengeluaran-index');
-    Route::get('pengeluaran/create', [ExpenseController::class, 'create'])->name('pengeluaran-create');
-    Route::post('pengeluaran/create', [ExpenseController::class, 'store'])->name('pengeluaran-store');
-    Route::get('pengeluaran/edit/{expense}', [ExpenseController::class, 'edit'])->name('pengeluaran-edit');
-    Route::post('pengeluaran/update/{expense}', [ExpenseController::class, 'update'])->name('pengeluaran-update');
-    Route::delete('pengeluaran/hapus/{expense}', [ExpenseController::class, 'destroy'])->name('pengeluaran-destroy');
+    Route::controller(EmployeesController::class)->group(function () {
+        Route::get('karyawan', 'index')->name('karyawan-index');
+        Route::get('karyawan/create', 'create')->name('karyawan-create');
+        Route::post('karyawan', 'store')->name('karyawan-store');
+        Route::get('karyawan/edit/{employees}', 'edit')->name('karyawan-edit');
+        Route::put('karyawan/{employees}', 'update')->name('karyawan-update');
+        Route::delete('karyawan/{employees}', 'destroy')->name('karyawan-destroy');
+    });
 
-    Route::get('laporan_penjualan', [SalesReportController::class, 'index'])->name('laporan_penjualan-index');
+    Route::controller(SalariesController::class)->group(function () {
+        Route::get('gaji', 'index')->name('gaji-index');
+        Route::get('gaji/create', 'create')->name('gaji-create');
+        Route::post('gaji', 'store')->name('gaji-store');
+        Route::delete('gaji/{salary}', 'destroy')->name('gaji-destroy');
+    });
+
+    Route::controller(ExpenseController::class)->group(function () {
+        Route::get('pengeluaran', 'index')->name('pengeluaran-index');
+        Route::get('pengeluaran/create', 'create')->name('pengeluaran-create');
+        Route::post('pengeluaran', 'store')->name('pengeluaran-store');
+        Route::get('pengeluaran/edit/{expense}', 'edit')->name('pengeluaran-edit');
+        Route::put('pengeluaran/{expense}', 'update')->name('pengeluaran-update');
+        Route::delete('pengeluaran/{expense}', 'destroy')->name('pengeluaran-destroy');
+    });
+
+    Route::controller(SalesReportController::class)->group(function () {
+        Route::get('laporan_penjualan', 'index')->name('laporan_penjualan-index');
+    });
 });

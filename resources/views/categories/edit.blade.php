@@ -16,6 +16,7 @@
     <div class="card">
         <form class="needs-validation" action="{{ route('kategori-update', $kategori) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
