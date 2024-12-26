@@ -39,7 +39,7 @@ Route::post('register-process', [AuthController::class, 'registerProcess'])->nam
 
 
 
-Route::middleware(['role:customer'])->group(function(){
+Route::middleware(['role:customer'])->group(function () {
     Route::get('buat_pesanan', [FrontendController::class, 'buat_pesanan'])->name('frontend-buat_pesanan');
     Route::post('buat_pesanan', [FrontendController::class, 'buat_pesananStore'])->name('frontend-buat_pesananStore');
 
@@ -53,29 +53,31 @@ Route::middleware(['role:customer'])->group(function(){
 
 
 
-Route::middleware(['role:admin'])->group(function(){
+Route::middleware(['role:admin'])->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'index')->name('dashboard');
-        Route::post('dashboard/{id}', 'indexPesananMasukA')->name('confirm-indexPesananMasukA');
+        Route::post('dashboard/{order}/confirm', 'confirmIncomingOrder')->name('confirmIncomingOrder');
     });
-    
+
     Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
     Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
-    
-    Route::get('menunggu-jadwal', [StatusController::class, 'indexMenungguJadwal'])->name('index-indexMenungguJadwal');
-    Route::get('menunggu-jadwal/confirm/{id}', [StatusController::class, 'indexMenungguJadwalA'])->name('index-indexMenungguJadwalA');
-    Route::get('menunggu-jadwal/cancel/{id}', [StatusController::class, 'indexMenungguJadwalB'])->name('index-indexMenungguJadwalB');
-    
-    Route::get('pesanan-dibuat', [StatusController::class, 'indexPesananDibuat'])->name('index-indexPesananDibuat');
-    Route::get('pesanan-dibuat/confirm/{id}', [StatusController::class, 'indexPesananDibuatA'])->name('index-indexPesananDibuatA');
-    
-    Route::get('pesanan-selesai', [StatusController::class, 'indexPesananSelesai'])->name('index-indexPesananSelesai');
-    Route::get('pesanan-selesai/confirm/{id}', [StatusController::class, 'indexPesananSelesaiA'])->name('index-indexPesananSelesaiA');
-    Route::post('pesanan-selesai/final/{id}', [StatusController::class, 'indexPesananSelesaiB'])->name('index-indexPesananSelesaiB');
 
-    Route::get('pesanan-diantar', [StatusController::class, 'indexPesananDiantar'])->name('index-indexPesananDiantar');
-    Route::post('pesanan-diantar/confirm/{id}', [StatusController::class, 'indexPesananDiantarA'])->name('index-indexPesananDiantarA');
+    Route::controller(StatusController::class)->group(function () {
+        Route::get('menunggu_jadwal', 'indexMenungguJadwal')->name('order.indexMenungguJadwal');
+        Route::post('menunggu_jadwal/confirm/{orders}', 'prosesPesanan')->name('order.prosesPesanan');
+        Route::post('menunggu_jadwal/cancel/{orders}', 'batalkanPesanan')->name('order.batalkanPesanan');
+
+        Route::get('pesanan-dibuat', 'indexPesananDibuat')->name('index-indexPesananDibuat');
+        Route::get('pesanan-dibuat/confirm/{id}', 'indexPesananDibuatA')->name('index-indexPesananDibuatA');
+
+        Route::get('pesanan-selesai', 'indexPesananSelesai')->name('index-indexPesananSelesai');
+        Route::get('pesanan-selesai/confirm/{id}', 'indexPesananSelesaiA')->name('index-indexPesananSelesaiA');
+        Route::post('pesanan-selesai/finalize/{id}', 'indexPesananSelesaiB')->name('index-indexPesananSelesaiB');
+
+        Route::get('pesanan-diantar', 'indexPesananDiantar')->name('index-indexPesananDiantar');
+        Route::post('pesanan-diantar/confirm/{id}', 'indexPesananDiantarA')->name('index-indexPesananDiantarA');
+    });
 
 
     // sudah direvisi
@@ -134,5 +136,4 @@ Route::middleware(['role:admin'])->group(function(){
     Route::controller(SalesReportController::class)->group(function () {
         Route::get('laporan_penjualan', 'index')->name('laporan_penjualan-index');
     });
-
 });

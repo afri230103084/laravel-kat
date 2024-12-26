@@ -9,7 +9,7 @@ class StatusController extends Controller
 {
     public function indexMenungguJadwal()
     {
-        $orders = Orders::with('customers')->with('order_items.product')
+        $orders = Orders::with('customer')->with('order_items.product')
             ->where('orders.status', 'menunggu')
             ->get();
 
@@ -18,22 +18,20 @@ class StatusController extends Controller
         ]);
     }
 
-    public function indexMenungguJadwalA($id)
+    public function prosesPesanan(Orders $orders)
     {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'dibuat';
-        $data->save();
+        $orders->status = 'dibuat';
+        $orders->save();
 
-        return redirect()->route('index-indexMenungguJadwal');
+        return redirect()->route('order.indexMenungguJadwal')->with('success', 'Pesanan telah diproses');
     }
 
-    public function indexMenungguJadwalB($id)
+    public function batalkanPesanan(Orders $orders)
     {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'batal';
-        $data->save();
+        $orders->status = 'batal';
+        $orders->save();
 
-        return redirect()->route('index-indexMenungguJadwal');
+        return redirect()->route('order.indexMenungguJadwal')->with('success', 'Pesanan telah dibatalkan');
     }
 
     public function indexPesananDibuat()

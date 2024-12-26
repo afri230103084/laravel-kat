@@ -26,10 +26,8 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function indexPesananMasukA(Request $request, $id)
+    public function confirmIncomingOrder(Request $request, Orders $order)
     {
-        $order = Orders::FindOrFail($id);
-
         $request->validate([
             'jumlah_dibayar' => 'required|numeric|min:0',
         ]);
@@ -46,6 +44,6 @@ class DashboardController extends Controller
         $order->status = 'menunggu';
         $order->save();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('success', 'Pesanan berhasil dikonfirmasi.');
     }
 }

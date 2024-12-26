@@ -47,6 +47,15 @@
 </div>
 
 <div class="col-sm-12">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #3CB371; color: white; border-left: 5px solid #2E7D32;">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Pesanan Online Masuk</h4>
     </div>
@@ -70,7 +79,7 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
+                                <td>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
                                     <span class="badge 
                                         @if ($order->status === 'baru') badge-primary
@@ -119,7 +128,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Nama Pelanggan</span>
-                        <strong>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</strong>
+                        <strong>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Tanggal Acara</span>
@@ -193,7 +202,7 @@
                     </div>
                 </ul>
             </div>
-            <form action="{{ route('confirm-indexPesananMasukA', $order->id) }}" method="POST">
+            <form action="{{ route('confirmIncomingOrder', $order->id) }}" method="POST">
                 <div class="modal-footer w-100">
                     <div class="text-start w-100 mb-3">
                         @csrf

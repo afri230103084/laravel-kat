@@ -114,7 +114,7 @@
                                         </i><span>Manage Pesanan</span>
                                     </a>
                                     <ul class="sidebar-submenu">
-                                        <li><a href="{{ route('index-indexMenungguJadwal') }}">Menunggu Jadwal</a></li>
+                                        <li><a href="{{ route('order.indexMenungguJadwal') }}">Menunggu Jadwal</a></li>
                                         <li><a href="{{ route('index-indexPesananDibuat') }}">Pesanan Dibuat</a></li>
                                         <li><a href="{{ route('index-indexPesananSelesai') }}">Pesanan Selesai</a></li>
                                         <li><a href="{{ route('index-indexPesananDiantar') }}">Pesanan Diantar</a></li>

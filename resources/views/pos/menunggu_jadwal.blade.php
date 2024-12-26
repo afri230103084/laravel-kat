@@ -4,6 +4,15 @@
 @section('content')
 
 <div class="col-sm-12">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #3CB371; color: white; border-left: 5px solid #2E7D32;">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+    
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Menunggu Jadwal</h4>
     </div>
@@ -28,7 +37,7 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
+                                <td>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
                                     <span class="badge badge-warning">
                                         {{ ucfirst($order->status) }}
@@ -79,7 +88,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Nama Pelanggan</span>
-                        <strong>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</strong>
+                        <strong>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Tanggal Acara</span>
@@ -153,9 +162,15 @@
                     </small>
                 </div>
                 <div class="text-right w-100 mb-3">
-                    <a href="/menunggu-jadwal/confirm/{{ $order->id }}" class="btn btn-success btn-sm">Proses Pesanan</a>
-                    <a href="/menunggu-jadwal/cancel/{{ $order->id }}" class="btn btn-danger btn-sm">Batalkan Pesanan</a>
-                </div>
+                    <form action="{{ route('order.prosesPesanan', $order) }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-success btn-sm">Proses Pesanan</button>
+                    </form>
+                    <form action="{{ route('order.batalkanPesanan', $order) }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm">Batalkan Pesanan</button>
+                    </form>
+                </div>                
             </div>
         </div>
     </div>
