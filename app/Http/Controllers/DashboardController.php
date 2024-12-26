@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $totalHargaSelesai = Orders::where('status', 'transaksi_selesai')->sum('total_harga');
         $totalPengeluaran = Expense::sum('jumlah');
 
-        $orders = Orders::with('customers')->with('order_items.product')
+        $orders = Orders::with('customer')->with('order_items.product')
                 ->where('orders.status', 'baru')
                 ->get();
 

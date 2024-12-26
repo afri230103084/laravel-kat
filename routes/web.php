@@ -54,8 +54,11 @@ Route::middleware(['role:customer'])->group(function(){
 
 
 Route::middleware(['role:admin'])->group(function(){
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('dashboard/confirm/{id}', [DashboardController::class, 'indexPesananMasukA'])->name('confirm-indexPesananMasukA');
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('dashboard', 'index')->name('dashboard');
+        Route::post('dashboard/{id}', 'indexPesananMasukA')->name('confirm-indexPesananMasukA');
+    });
     
     Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
     Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
@@ -131,4 +134,5 @@ Route::middleware(['role:admin'])->group(function(){
     Route::controller(SalesReportController::class)->group(function () {
         Route::get('laporan_penjualan', 'index')->name('laporan_penjualan-index');
     });
+
 });
