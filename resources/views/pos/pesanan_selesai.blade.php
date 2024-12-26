@@ -4,6 +4,15 @@
 @section('content')
 
 <div class="col-sm-12">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #3CB371; color: white; border-left: 5px solid #2E7D32;">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+    
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Pesanan Selesai</h4>
     </div>

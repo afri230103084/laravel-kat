@@ -36,7 +36,7 @@ class StatusController extends Controller
 
     public function indexPesananDibuat()
     {
-        $orders = Orders::with('customers')->with('order_items.product')
+        $orders = Orders::with('customer')->with('order_items.product')
             ->where('orders.status', 'dibuat')
             ->get();
 
@@ -45,13 +45,12 @@ class StatusController extends Controller
         ]);
     }
 
-    public function indexPesananDibuatA($id)
+    public function selesaikanPesanan(Orders $orders)
     {
-        $data = Orders::FindOrFail($id);
-        $data->status = 'selesai';
-        $data->save();
+        $orders->status = 'selesai';
+        $orders->save();
 
-        return redirect()->route('index-indexPesananDibuat');
+        return redirect()->route('order.indexPesananDibuat')->with('success', 'Pesanan telah selesai');
     }
 
     public function indexPesananSelesai()

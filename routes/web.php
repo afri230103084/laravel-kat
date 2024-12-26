@@ -65,11 +65,11 @@ Route::middleware(['role:admin'])->group(function () {
 
     Route::controller(StatusController::class)->group(function () {
         Route::get('menunggu_jadwal', 'indexMenungguJadwal')->name('order.indexMenungguJadwal');
-        Route::post('menunggu_jadwal/confirm/{orders}', 'prosesPesanan')->name('order.prosesPesanan');
-        Route::post('menunggu_jadwal/cancel/{orders}', 'batalkanPesanan')->name('order.batalkanPesanan');
+        Route::post('menunggu_jadwal/{orders}/confirm', 'prosesPesanan')->name('order.prosesPesanan');
+        Route::post('menunggu_jadwal/{orders}/cancel', 'batalkanPesanan')->name('order.batalkanPesanan');
 
-        Route::get('pesanan-dibuat', 'indexPesananDibuat')->name('index-indexPesananDibuat');
-        Route::get('pesanan-dibuat/confirm/{id}', 'indexPesananDibuatA')->name('index-indexPesananDibuatA');
+        Route::get('pesanan_dibuat', 'indexPesananDibuat')->name('order.indexPesananDibuat');
+        Route::post('pesanan_dibuat/{orders}/confirm', 'selesaikanPesanan')->name('order.selesaikanPesanan');
 
         Route::get('pesanan-selesai', 'indexPesananSelesai')->name('index-indexPesananSelesai');
         Route::get('pesanan-selesai/confirm/{id}', 'indexPesananSelesaiA')->name('index-indexPesananSelesaiA');
