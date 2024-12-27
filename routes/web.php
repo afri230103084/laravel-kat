@@ -60,8 +60,10 @@ Route::middleware(['role:admin'])->group(function () {
         Route::post('dashboard/{order}/confirm', 'confirmIncomingOrder')->name('confirmIncomingOrder');
     });
 
-    Route::get('pesanan/create', [OrdersController::class, 'create'])->name('pesanan-create');
-    Route::post('pesanan/create', [OrdersController::class, 'store'])->name('pesanan-store');
+    Route::controller(OrdersController::class)->group(function () {
+        Route::get('pesanan/create', 'create')->name('pesanan-create');
+        Route::post('pesanan', 'store')->name('pesanan-store');
+    });
 
     Route::controller(StatusController::class)->group(function () {
         Route::get('menunggu_jadwal', 'indexMenungguJadwal')->name('order.indexMenungguJadwal');
@@ -75,12 +77,10 @@ Route::middleware(['role:admin'])->group(function () {
         Route::post('pesanan_selesai/{orders}/confirm', 'jadwalkanPengiriman')->name('order.jadwalkanPengiriman');
         Route::post('pesanan_selesai/{orders}/finalize', 'finalizeTransaksi')->name('order.finalizeTransaksi');
 
-        Route::get('pesanan-diantar', 'indexPesananDiantar')->name('index-indexPesananDiantar');
-        Route::post('pesanan-diantar/confirm/{id}', 'indexPesananDiantarA')->name('index-indexPesananDiantarA');
+        Route::get('pesanan_diantar', 'indexPesananDiantar')->name('order.indexPesananDiantar');
+        Route::post('pesanan_diantar/{orders}/confirm', 'confirmPesananDiantar')->name('order.confirmPesananDiantar');
     });
 
-
-    // sudah direvisi
     Route::controller(CustomersController::class)->group(function () {
         Route::get('pelanggan', 'index')->name('pelanggan-index');
         Route::get('pelanggan/create', 'create')->name('pelanggan-create');

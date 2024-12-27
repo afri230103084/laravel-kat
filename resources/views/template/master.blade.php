@@ -117,7 +117,7 @@
                                         <li><a href="{{ route('order.indexMenungguJadwal') }}">Menunggu Jadwal</a></li>
                                         <li><a href="{{ route('order.indexPesananDibuat') }}">Pesanan Dibuat</a></li>
                                         <li><a href="{{ route('order.indexPesananSelesai') }}">Pesanan Selesai</a></li>
-                                        <li><a href="{{ route('index-indexPesananDiantar') }}">Pesanan Diantar</a></li>
+                                        <li><a href="{{ route('order.indexPesananDiantar') }}">Pesanan Diantar</a></li>
                                     </ul>
                                 </li>
                                 <li class="sidebar-list">

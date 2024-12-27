@@ -99,7 +99,7 @@ class StatusController extends Controller
 
     public function indexPesananDiantar()
     {
-        $orders = Orders::with('customers')->with('order_items.product')
+        $orders = Orders::with('customer')->with('order_items.product')
             ->where('orders.status', 'diantar')
             ->get();
 
@@ -108,30 +108,26 @@ class StatusController extends Controller
         ]);
     }
 
-    public function indexPesananDiantarA(Request $request, $id)
+    public function confirmPesananDiantar(Request $request, Orders $orders)
     {
-        $data = Orders::findOrFail($id);
-
-        if ($data->status_pembayaran === 'lunas') {
-            $data->status = 'transaksi_selesai';
-            $data->save();
-            return redirect()->route('index-indexPesananSelesai');
+        if ($orders->status_pembayaran === 'lunas') {
+            $orders->update(['status' => 'transaksi_selesai']);
+            return redirect()->route('order.indexPesananDiantar')
+                ->with('success', 'Pesanan berhasil diselesaikan.');
         }
-
-        if ($request->has('jumlah_pembayaran')) {
-            $jumlah_pembayaran = $request->input('jumlah_pembayaran');
-            $data->jumlah_dibayar += $jumlah_pembayaran;
-
-            if ($data->jumlah_dibayar >= $data->total_harga) {
-                $data->status_pembayaran = 'lunas';
+    
+        if ($request->filled('jumlah_pembayaran')) {
+            $orders->increment('jumlah_dibayar', $request->jumlah_pembayaran);
+    
+            if ($orders->jumlah_dibayar >= $orders->total_harga) {
+                $orders->update(['status_pembayaran' => 'lunas']);
             }
         } else {
             return redirect()->back();
         }
 
-        $data->status = 'transaksi_selesai';
-        $data->save();
+        $orders->update(['status' => 'transaksi_selesai']);
 
-        return redirect()->route('index-indexPesananDiantar');
+        return redirect()->route('order.indexPesananDiantar')->with('success', 'Pesanan berhasil diupdate.');
     }
 }

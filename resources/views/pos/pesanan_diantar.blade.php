@@ -4,6 +4,15 @@
 @section('content')
 
 <div class="col-sm-12">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #3CB371; color: white; border-left: 5px solid #2E7D32;">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Pesanan Diantar</h4>
     </div>
@@ -28,7 +37,7 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</td>
+                                <td>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</td>
                                 <td>
                                     <span class="badge 
                                         @if ($order->status === 'baru') badge-primary
@@ -76,7 +85,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="{{ route('index-indexPesananDiantarA', $order->id) }}" method="post">
+            <form action="{{ route('order.confirmPesananDiantar', $order) }}" method="post">
                 @csrf
                 <div class="modal-body">
                     <ul class="list-group">
@@ -86,7 +95,7 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>Nama Pelanggan</span>
-                            <strong>{{ $order->customers->nama ?? 'Tidak Diketahui' }}</strong>
+                            <strong>{{ $order->customer->nama ?? 'Tidak Diketahui' }}</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>Tanggal Acara</span>

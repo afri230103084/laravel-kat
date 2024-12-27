@@ -48,7 +48,7 @@ class OrdersController extends Controller
         $buktiPembayaranPath = null;
     
         if ($request->hasFile('bukti_pembayaran')) {
-            $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran');
+            $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         }
     
         $order = Orders::create([
