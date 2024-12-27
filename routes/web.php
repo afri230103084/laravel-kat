@@ -26,35 +26,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [OnlineController::class, 'beranda'])->name('user-beranda');
-Route::get('u_about', [OnlineController::class, 'about'])->name('user-about');
-Route::get('u_kategori', [OnlineController::class, 'kategori'])->name('user-kategori');
-Route::get('u_menu', [OnlineController::class, 'menu'])->name('user-menu');
-
-Route::get('login', [AuthController::class, 'loginPage'])->name('login');
-Route::post('login-process', [AuthController::class, 'loginProcess'])->name('login-process');
-Route::get('logout-process', [AuthController::class, 'logoutProcess'])->name('logout-process');
-Route::get('register', [AuthController::class, 'registerPage'])->name('register');
-Route::post('register-process', [AuthController::class, 'registerProcess'])->name('register-process');
-
-
-
-Route::middleware(['role:customer'])->group(function () {
-    Route::get('buat_pesanan', [FrontendController::class, 'buat_pesanan'])->name('frontend-buat_pesanan');
-    Route::post('buat_pesanan', [FrontendController::class, 'buat_pesananStore'])->name('frontend-buat_pesananStore');
-
-    Route::get('keranjang_belanja', [FrontendController::class, 'keranjangBelanja'])->name('frontend-keranjangBelanja');
-    Route::get('keranjang_belanja/hapus/{id}', [FrontendController::class, 'HapusKeranjangBelanja'])->name('frontend-HapusKeranjangBelanja');
-    Route::get('keranjang_belanja/konfirmasi/{id}', [FrontendController::class, 'konfirmasiKeranjang'])->name('frontend-konfirmasiKeranjang');
-    Route::post('keranjang_belanja/konfirmasi/{id}', [FrontendController::class, 'konfirmasiKeranjangStore'])->name('frontend-konfirmasiKeranjangStore');
-
-    Route::get('daftar_pesanan', [FrontendController::class, 'daftar_pesananUser'])->name('frontend-daftar_pesananUser');
+Route::controller(OnlineController::class)->group(function () {
+    Route::get('/', 'beranda')->name('user.beranda');
+    Route::get('u_tentang', 'about')->name('user.about');
+    Route::get('u_kategori', 'kategori')->name('user.kategori');
+    Route::get('u_menu', 'menu')->name('user.menu');
 });
 
 
+Route::controller(AuthController::class)->group(function () {
+    Route::get('login', 'loginPage')->name('login');
+    Route::post('login-process', 'loginProcess')->name('login-process');
+    Route::get('logout-process', 'logoutProcess')->name('logout-process');
+    Route::get('register', 'registerPage')->name('register');
+    Route::post('register-process', 'registerProcess')->name('register-process');
+});
+
+
+Route::middleware(['role:customer'])->group(function () {
+    Route::controller(FrontendController::class)->group(function () {
+        Route::get('buat_pesanan', 'buat_pesanan')->name('frontend-buat_pesanan');
+        Route::post('buat_pesanan', 'buat_pesananStore')->name('frontend-buat_pesananStore');
+
+        Route::get('keranjang_belanja', 'keranjangBelanja')->name('frontend-keranjangBelanja');
+        Route::get('keranjang_belanja/hapus/{id}', 'HapusKeranjangBelanja')->name('frontend-HapusKeranjangBelanja');
+        Route::get('keranjang_belanja/konfirmasi/{id}', 'konfirmasiKeranjang')->name('frontend-konfirmasiKeranjang');
+        Route::post('keranjang_belanja/konfirmasi/{id}', 'konfirmasiKeranjangStore')->name('frontend-konfirmasiKeranjangStore');
+
+        Route::get('daftar_pesanan', 'daftar_pesananUser')->name('frontend-daftar_pesananUser');
+    });
+});
+
 
 Route::middleware(['role:admin'])->group(function () {
-
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'index')->name('dashboard');
         Route::post('dashboard/{order}/confirm', 'confirmIncomingOrder')->name('confirmIncomingOrder');

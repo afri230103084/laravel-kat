@@ -29,16 +29,16 @@
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <hr />
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('user-beranda') }}">Beranda</a>
+                            <a class="nav-link active" aria-current="page" href="{{ route('user.beranda') }}">Beranda</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user-about') }}">Tentang Kami</a>
+                            <a class="nav-link" href="{{ route('user.about') }}">Tentang Kami</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user-kategori') }}">Kategori</a>
+                            <a class="nav-link" href="{{ route('user.kategori') }}">Kategori</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('user-menu') }}">Menu</a>
+                            <a class="nav-link" href="{{ route('user.menu') }}">Menu</a>
                         </li>
                     </ul>
                     <hr />
@@ -55,16 +55,16 @@
         <div class="container d-flex flex-wrap fs-15">
             <ul class="nav me-auto">
                 <li class="nav-item me-2">
-                    <a href="{{ route('user-beranda') }}" class="nav-link link-dark text-grey px-2 active" aria-current="page">Beranda</a>
+                    <a href="{{ route('user.beranda') }}" class="nav-link link-dark text-grey px-2 active" aria-current="page">Beranda</a>
                 </li>
                 <li class="nav-item me-2">
-                    <a href="{{ route('user-about') }}" class="nav-link link-dark text-grey px-2">Tentang Kami</a>
+                    <a href="{{ route('user.about') }}" class="nav-link link-dark text-grey px-2">Tentang Kami</a>
                 </li>
                 <li class="nav-item me-2">
-                    <a href="{{ route('user-kategori') }}" class="nav-link link-dark text-grey px-2">Kategori</a>
+                    <a href="{{ route('user.kategori') }}" class="nav-link link-dark text-grey px-2">Kategori</a>
                 </li>
                 <li class="nav-item me-2">
-                    <a href="{{ route('user-menu') }}" class="nav-link link-dark text-grey px-2">Menu</a>
+                    <a href="{{ route('user.menu') }}" class="nav-link link-dark text-grey px-2">Menu</a>
                 </li>
             </ul>
             <ul class="nav">
