@@ -26,15 +26,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::controller(OnlineController::class)->group(function () {
-//     Route::get('/', 'beranda')->name('user.beranda');
-//     Route::get('u_tentang', 'about')->name('user.about');
-//     Route::get('u_kategori', 'kategori')->name('user.kategori');
-//     Route::get('u_menu', 'menu')->name('user.menu');
-// });
-
-Route::get('/', function () {
-    return view ('template.master-landing');
+Route::controller(OnlineController::class)->group(function () {
+    Route::get('/', 'beranda')->name('user.beranda');
+    Route::get('u_tentang', 'about')->name('user.about');
+    Route::get('u_kategori', 'kategori')->name('user.kategori');
+    Route::get('u_menu', 'menu')->name('user.menu');
 });
 
 
