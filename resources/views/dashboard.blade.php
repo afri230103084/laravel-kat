@@ -25,7 +25,7 @@
                     <div class="media static-top-widget">
                         <div class="align-self-center text-center"><i data-feather="dollar-sign"></i></div>
                         <div class="media-body"><span class="m-0">Penjualan</span>
-                            <h4 class="mb-0 counter">Rp {{ number_format($totalHargaSelesai, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="dollar-sign"></i>
+                            <h4 class="mb-0 counter">Rp{{ number_format($totalHargaSelesai, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="dollar-sign"></i>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     <div class="media static-top-widget">
                         <div class="align-self-center text-center"><i data-feather="tag"></i></div>
                         <div class="media-body"><span class="m-0">Pengeluaran</span>
-                            <h4 class="mb-0 counter">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="tag"></i>
+                            <h4 class="mb-0 counter">Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</h4><i class="icon-bg" data-feather="tag"></i>
                         </div>
                     </div>
                 </div>

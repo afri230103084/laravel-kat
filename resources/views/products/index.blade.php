@@ -39,7 +39,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->nama }}</td>
-                            <td>{{ \Illuminate\Support\Str::limit($item->deskripsi, 40, ' ...') }}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($item->deskripsi, 60, ' ...') }}</td>
                             <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
                             <td>
                                 @if ($item->status == "aktif")
